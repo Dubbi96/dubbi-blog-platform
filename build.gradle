@@ -1,0 +1,62 @@
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '3.2.1'
+	id 'io.spring.dependency-management' version '1.1.4'
+	id 'org.asciidoctor.jvm.convert' version '3.3.2'
+}
+
+group = 'com.dubbi'
+version = '0.0.1-SNAPSHOT'
+
+java {
+	sourceCompatibility = '17'
+}
+
+repositories {
+	mavenCentral()
+}
+
+ext {
+	set('snippetsDir', file("build/generated-snippets"))
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-actuator' //애플리케이션의 상태와 메트릭스 상태 모니터링
+
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa' //DB 상호작용을 위한 JPA(Hibernate 의존성)
+
+	implementation 'org.springframework.boot:spring-boot-starter-mail'  //이메일 서비스를 위한 의존성(알림 및 메일링)
+
+	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client' //소셜 미디어 로그인 기능을 위한 OAuth2 클라이언트 의존
+
+	implementation 'org.springframework.boot:spring-boot-starter-security' //Spring Security를 사용하여 인증 및 권한 부여를 관리
+
+	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf' //Front-end 관련 테스트 페이지가 필요할 경우 활용
+
+	implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6' // Thymeleaf와 Spring Security를 통합하기 위한 추가 의존성, Spring Security의 기능을 Thymeleaf 템플릿에서 사용할 수 있게 해줌
+
+	implementation 'org.springframework.boot:spring-boot-starter-validation' //요청 데이터 유효성 검사를 위한 의존성
+
+	implementation 'org.springframework.boot:spring-boot-starter-web' //RESTful 애플리케이션을 구축하기 위한 기본적인 웹 의존
+
+	implementation 'io.jsonwebtoken:jjwt:0.9.1' // JWT를 위한 의존성
+
+	runtimeOnly 'com.mysql:mysql-connector-j' //my-sql db 활용하기 위한 driver
+
+	testImplementation 'org.springframework.boot:spring-boot-starter-test' //Spring Boot 애플리케이션을 위한 테스트 의존성, 단위 및 통합 테스트를 위해 사용
+
+	testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc' //Spring REST Docs와 MockMvc를 사용하여 API 문서화를 위한 테스트 의존성
+
+	testImplementation 'org.springframework.security:spring-security-test' //Spring Security 관련 테스트를 위한 의존성, 보안 구성을 테스트하는 데 사용
+
+}
+
+tasks.named('test') {
+	outputs.dir snippetsDir
+	useJUnitPlatform()
+}
+
+tasks.named('asciidoctor') {
+	inputs.dir snippetsDir
+	dependsOn test
+}
