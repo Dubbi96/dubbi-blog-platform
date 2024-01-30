@@ -17,10 +17,31 @@ repositories {
 }
 
 ext {
+	set('springCloudVersion', "2021.0.3")
 	set('snippetsDir', file("build/generated-snippets"))
+	set('generated', file('src/main/generated'))
 }
 
+// 사용 라이브러리 목록
+// implementation: 컴파일(배포/테스트) + 런타임(배포/테스트)에 사용됨
+// testImplementation: 컴파일(테스트) + 런타임(테스트)에 사용됨
+// compileOnly: 컴파일(배포/테스트)에 사용됨
+// annotationProcessor: 컴파일 도중 어노테이션에만 사용됨
+// developmentOnly: 컴파일에도 사용되지 않음
+// 참고: https://docs.gradle.org/current/userguide/declaring_dependencies.html
+// 참고: https://docs.gradle.org/current/userguide/java_plugin.html#tab:configurations
 dependencies {
+
+	compileOnly 'org.projectlombok:lombok'
+
+	annotationProcessor 'org.projectlombok:lombok' //lombok annotation을 사용하기 위한 의존성
+
+	// Spring boot 3.x이상에서 QueryDsl 패키지를 정의하는 방법
+	implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
+	annotationProcessor "com.querydsl:querydsl-apt:5.0.0:jakarta"
+	annotationProcessor "jakarta.annotation:jakarta.annotation-api"
+	annotationProcessor "jakarta.persistence:jakarta.persistence-api"
+
 	implementation 'org.springframework.boot:spring-boot-starter-actuator' //애플리케이션의 상태와 메트릭스 상태 모니터링
 
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa' //DB 상호작용을 위한 JPA(Hibernate 의존성)
@@ -28,8 +49,12 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-mail'  //이메일 서비스를 위한 의존성(알림 및 메일링)
 
 	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client' //소셜 미디어 로그인 기능을 위한 OAuth2 클라이언트 의존
+	implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
 
-	implementation 'org.springframework.boot:spring-boot-starter-security' //Spring Security를 사용하여 인증 및 권한 부여를 관리
+	implementation 'org.springframework.boot:spring-boot-starter-security:2.7.0'
+	implementation 'org.springframework.security:spring-security-core'
+	implementation 'org.springframework.security:spring-security-test'
+	testCompileOnly 'org.springframework.security:spring-security-test' //Spring Security를 사용하여 인증 및 권한 부여를 관리
 
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf' //Front-end 관련 테스트 페이지가 필요할 경우 활용
 
@@ -39,7 +64,17 @@ dependencies {
 
 	implementation 'org.springframework.boot:spring-boot-starter-web' //RESTful 애플리케이션을 구축하기 위한 기본적인 웹 의존
 
-	implementation 'io.jsonwebtoken:jjwt:0.9.1' // JWT를 위한 의존성
+	implementation 'org.modelmapper:modelmapper:2.4.4'
+	implementation 'io.jsonwebtoken:jjwt-api:0.11.2'
+	implementation 'io.jsonwebtoken:jjwt-impl:0.11.2'
+	implementation 'io.jsonwebtoken:jjwt-jackson:0.11.2' // JWT를 위한 의존성
+
+	implementation 'io.springfox:springfox-swagger-ui:3.0.0' //swagger
+	implementation 'io.springfox:springfox-boot-starter:3.0.0'
+	implementation 'io.springfox:springfox-bean-validators:3.0.0'
+	implementation 'org.jetbrains:annotations:20.1.0'
+	testImplementation 'junit:junit:4.13.2'
+
 
 	runtimeOnly 'com.mysql:mysql-connector-j' //my-sql db 활용하기 위한 driver
 
@@ -59,4 +94,22 @@ tasks.named('test') {
 tasks.named('asciidoctor') {
 	inputs.dir snippetsDir
 	dependsOn test
+}
+
+// Test 관련 모든 태스크가 JUnit 기반 단위 테스트를 자동으로 실행함
+tasks.withType(Test) {
+	useJUnitPlatform()
+}
+
+// querydsl QClass 파일 생성 위치를 지정
+tasks.withType(JavaCompile) {
+	options.getGeneratedSourceOutputDirectory().set(file(project.generated))
+}
+
+// java source set 에 querydsl QClass 위치 추가
+sourceSets.main.java.srcDirs += [ project.generated ]
+
+// gradle clean 시에 QClass 디렉토리 삭제
+clean {
+	delete file(project.generated)
 }
