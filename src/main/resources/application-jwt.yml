@@ -1,0 +1,10 @@
+jwt:
+  secretKey: VlwEyVBsYt9V7zq57TejMnVUyzblYcfPQye08f7MGVA9XkHa
+
+  access:
+    expiration: 3600000 # 60분
+    header : Authorization
+
+  refresh:
+      expiration : 1209600000 #2주
+      header : Authorization-refresh

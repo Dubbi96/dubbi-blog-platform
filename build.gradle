@@ -35,6 +35,8 @@ dependencies {
 	compileOnly 'org.projectlombok:lombok'
 
 	annotationProcessor 'org.projectlombok:lombok' //lombok annotation을 사용하기 위한 의존성
+	annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
+
 
 	// Spring boot 3.x이상에서 QueryDsl 패키지를 정의하는 방법
 	implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
@@ -67,11 +69,10 @@ dependencies {
 	implementation 'org.modelmapper:modelmapper:2.4.4'
 	implementation 'io.jsonwebtoken:jjwt-api:0.11.2'
 	implementation 'io.jsonwebtoken:jjwt-impl:0.11.2'
+	implementation 'com.auth0:java-jwt:4.2.1'
 	implementation 'io.jsonwebtoken:jjwt-jackson:0.11.2' // JWT를 위한 의존성
 
-	implementation 'io.springfox:springfox-swagger-ui:3.0.0' //swagger
-	implementation 'io.springfox:springfox-boot-starter:3.0.0'
-	implementation 'io.springfox:springfox-bean-validators:3.0.0'
+	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0' //spring doc //기존에 있던 swagger 의존성 주입 방식이 변경 됨
 	implementation 'org.jetbrains:annotations:20.1.0'
 	testImplementation 'junit:junit:4.13.2'
 

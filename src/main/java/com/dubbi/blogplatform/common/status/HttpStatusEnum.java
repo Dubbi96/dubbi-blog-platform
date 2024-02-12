@@ -1,7 +1,9 @@
 package com.dubbi.blogplatform.common.status;
 
+import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
+@Getter
 public enum HttpStatusEnum {
     OK(200, "OK",HttpStatus.OK),
     BAD_REQUEST(400, "BAD_REQUEST", HttpStatus.BAD_REQUEST),
