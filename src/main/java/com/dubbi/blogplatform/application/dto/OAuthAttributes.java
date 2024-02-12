@@ -34,12 +34,14 @@ public class OAuthAttributes {
     public static OAuthAttributes of(SocialType socialType, String userNameAttributeName, Map<String, Object> attributes){
 
         if(socialType == SocialType.NAVER){
+            return ofNaver(userNameAttributeName,attributes);
             //ofNaver
         }
         if(socialType == SocialType.KAKAO){
+            return ofKakao(userNameAttributeName,attributes);
             //ofGoogle
         }
-        return null;//goGoogle
+        return ofGoogle(userNameAttributeName,attributes);//ofGoogle
     }
 
     private static OAuthAttributes ofKakao(String userNameAttributeName, Map<String, Object> attributes){
