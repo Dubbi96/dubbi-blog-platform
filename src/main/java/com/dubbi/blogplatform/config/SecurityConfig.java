@@ -26,6 +26,11 @@ import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.Arrays;
 
 @Configuration
 @EnableWebSecurity
@@ -43,6 +48,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
         http
+                .cors((cors) -> cors.configurationSource(corsConfigurationSource()))
                 .formLogin(AbstractHttpConfigurer::disable) // FormLogin 사용 X
                 .httpBasic(AbstractHttpConfigurer::disable) // httpBasic 사용 X
                 .csrf(AbstractHttpConfigurer::disable) // csrf 보안 사용 X
@@ -70,6 +76,23 @@ public class SecurityConfig {
         http.addFilterBefore(jwtAuthenticationProcessingFilter(), CustomJsonUsernamePasswordAuthenticationFilter.class);
 
         return http.build();
+    }
+    /**
+     * CORS(Cross Origin Resource Sharing) 설정 추가
+     */
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:9002")); // 허용할 오리진 설정
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE")); // 허용할 HTTP 메소드 설정
+        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type", "Accept")); // 허용할 헤더 설정
+        configuration.setAllowCredentials(true); // 쿠키를 넘기기 위해 사용
+        configuration.setMaxAge(3600L); // pre-flight request 캐시 시간 설정
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration); // 모든 경로에 대해 위에서 정의한 CORS 설정 적용
+
+        return source;
     }
 
     /**
@@ -119,8 +142,7 @@ public class SecurityConfig {
 
     @Bean
     public JwtAuthenticationProcessingFilter jwtAuthenticationProcessingFilter() {
-        JwtAuthenticationProcessingFilter jwtAuthenticationFilter = new JwtAuthenticationProcessingFilter(jwtService, userRepository);
-        return jwtAuthenticationFilter;
+        return new JwtAuthenticationProcessingFilter(jwtService, userRepository);
     }
     @Bean
     public PasswordEncoder passwordEncoder() {

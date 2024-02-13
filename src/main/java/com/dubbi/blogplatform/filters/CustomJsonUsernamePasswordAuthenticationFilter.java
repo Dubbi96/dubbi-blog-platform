@@ -1,10 +1,9 @@
 package com.dubbi.blogplatform.filters;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -53,20 +52,19 @@ public class CustomJsonUsernamePasswordAuthenticationFilter extends AbstractAuth
      * 꺼낸 messageBody를 objectMapper.readValue()로 Map으로 변환 (Key : JSON의 키 -> email, password)
      * Map의 Key(email, password)로 해당 이메일, 패스워드 추출 후
      * UsernamePasswordAuthenticationToken의 파라미터 principal, credentials에 대입
-     *
      * AbstractAuthenticationProcessingFilter(부모)의 getAuthenticationManager()로 AuthenticationManager 객체를 반환 받은 후
      * authenticate()의 파라미터로 UsernamePasswordAuthenticationToken 객체를 넣고 인증 처리
      * (여기서 AuthenticationManager 객체는 ProviderManager -> SecurityConfig에서 설정)
      */
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException, IOException {
-        if(request.getContentType() == null || !request.getContentType().equals(CONTENT_TYPE)  ) {
+        if(request.getContentType() == null || !request.getContentType().contains(CONTENT_TYPE)  ) {
             throw new AuthenticationServiceException("Authentication Content-Type not supported: " + request.getContentType());
         }
 
         String messageBody = StreamUtils.copyToString(request.getInputStream(), StandardCharsets.UTF_8);
 
-        Map<String, String> usernamePasswordMap = objectMapper.readValue(messageBody, Map.class);
+        Map<String, String> usernamePasswordMap = objectMapper.readValue(messageBody, new TypeReference<Map<String, String>>() {});
 
         String email = usernamePasswordMap.get(USERNAME_KEY);
         String password = usernamePasswordMap.get(PASSWORD_KEY);
