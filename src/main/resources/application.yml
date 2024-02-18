@@ -5,16 +5,10 @@ server:
 
 spring:
   profiles:
-    include: jwt, oauth #포함시킬 application files 나열
+    include: jwt, oauth, ssl, datasource #포함시킬 application files 나열
 
   main:
     allow-bean-definition-overriding: true
-
-  datasource:
-    url: jdbc:mysql://localhost:3306/dubbi
-    username: dubbi
-    password: kang8349
-    driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:
     generate-ddl: true
