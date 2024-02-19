@@ -3,6 +3,7 @@ package com.dubbi.blogplatform.application.service.implementation;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.dubbi.blogplatform.application.service.JwtService;
+import com.dubbi.blogplatform.domain.entity.User;
 import com.dubbi.blogplatform.domain.repository.UserRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -117,6 +118,8 @@ public class JwtServiceImpl implements JwtService {
         setAccessTokenHeader(response, accessToken);
         setRefreshTokenHeader(response, refreshToken);
         log.info("Access Token, Refresh Token 헤더 설정 완료");
+        log.info("Access Token : {}", accessToken);
+        log.info("Refresh Token : {}", refreshToken);
     }
 
     /**
@@ -201,8 +204,9 @@ public class JwtServiceImpl implements JwtService {
     public void updateRefreshToken(String email, String refreshToken) {
         userRepository.findByEmail(email)
                 .ifPresentOrElse(
-                        user -> user.updateRefreshToken(refreshToken),
-                        () -> new Exception("일치하는 회원이 없습니다.")
+                        user -> {user.updateRefreshToken(refreshToken);
+                                userRepository.saveAndFlush(user);},
+                        () -> new RuntimeException("일치하는 회원이 없습니다.")
                 );
     }
 

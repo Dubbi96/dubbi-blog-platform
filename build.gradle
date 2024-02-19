@@ -76,6 +76,7 @@ dependencies {
 	implementation 'org.jetbrains:annotations:20.1.0'
 	testImplementation 'junit:junit:4.13.2'
 
+	implementation 'org.springframework.boot:spring-boot-starter-aop' //AOP 설정하기 위한 dependency
 
 	runtimeOnly 'com.mysql:mysql-connector-j' //my-sql db 활용하기 위한 driver
 
@@ -84,6 +85,8 @@ dependencies {
 	testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc' //Spring REST Docs와 MockMvc를 사용하여 API 문서화를 위한 테스트 의존성
 
 	testImplementation 'org.springframework.security:spring-security-test' //Spring Security 관련 테스트를 위한 의존성, 보안 구성을 테스트하는 데 사용
+
+
 
 }
 

@@ -31,6 +31,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Arrays;
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -49,9 +50,9 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
         http
                 .cors((cors) -> cors.configurationSource(corsConfigurationSource()))
-                .formLogin(AbstractHttpConfigurer::disable) // FormLogin 사용 X
-                .httpBasic(AbstractHttpConfigurer::disable) // httpBasic 사용 X
                 .csrf(AbstractHttpConfigurer::disable) // csrf 보안 사용 X
+                .formLogin(AbstractHttpConfigurer::disable)
+                .httpBasic(AbstractHttpConfigurer::disable) // httpBasic 사용 X
                 // 세션 사용하지 않으므로 STATELESS로 설정
                 .headers((headers)
                         -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
@@ -83,7 +84,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:9002")); // 허용할 오리진 설정
+        configuration.setAllowedOrigins(List.of("http://localhost:9002")); // 허용할 오리진 설정
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE")); // 허용할 HTTP 메소드 설정
         configuration.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type", "Accept")); // 허용할 헤더 설정
         configuration.setAllowCredentials(true); // 쿠키를 넘기기 위해 사용

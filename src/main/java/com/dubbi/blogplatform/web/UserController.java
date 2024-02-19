@@ -1,7 +1,9 @@
 package com.dubbi.blogplatform.web;
 
+import com.dubbi.blogplatform.application.dto.GetUserDto;
 import com.dubbi.blogplatform.application.dto.UserSignUpDto;
 import com.dubbi.blogplatform.application.service.UserService;
+import com.dubbi.blogplatform.aspect.AccessTokenUser;
 import com.dubbi.blogplatform.domain.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -25,4 +27,11 @@ public class UserController {
     public String jwtTest(){
         return "jwtTest 요청 성공";
     }
+
+    @GetMapping("/user-detail")
+    public ResponseEntity<GetUserDto> getUser(@AccessTokenUser String accessToken){
+        GetUserDto response = userService.getUser(accessToken);
+        return ResponseEntity.ok().body(response);
+    }
+
 }

@@ -7,6 +7,7 @@ import com.dubbi.blogplatform.enumeratedClasses.Role;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
@@ -22,6 +23,7 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
 
     private final JwtService jwtService;
     private final UserRepository userRepository;
+    private final String BASE_URL = "http://localhost:9002";
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
@@ -33,7 +35,7 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
             if(oAuth2User.getRole() == Role.GUEST){
                 String accessToken = jwtService.createAccessToken(oAuth2User.getEmail());
                 response.addHeader(jwtService.getAccessHeader(),"Bearer " + accessToken);
-                response.sendRedirect("oauth2/sign-up"); //프론트 회원가입 추가 정보 입력 form으로 redirect
+                response.sendRedirect(BASE_URL+"/signup.html"); //프론트 회원가입 추가 정보 입력 form으로 redirect
 
                 jwtService.sendAccessAndRefreshToken(response, accessToken, null);
             }else {
@@ -52,6 +54,7 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
         response.addHeader(jwtService.getRefreshHeader(), "Bearer " + refreshToken);
 
         jwtService.sendAccessAndRefreshToken(response, accessToken, refreshToken);
-        jwtService.updateRefreshToken(oAuth2User.getEmail(), refreshToken);
+        log.info("계정 이메일 : {} " , oAuth2User.getEmail());
+        jwtService.updateRefreshToken(oAuth2User.getEmail(),refreshToken);
     }
 }

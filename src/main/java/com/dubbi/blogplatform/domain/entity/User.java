@@ -1,5 +1,6 @@
 package com.dubbi.blogplatform.domain.entity;
 
+import com.dubbi.blogplatform.application.dto.OAuthEnrollDto;
 import com.dubbi.blogplatform.enumeratedClasses.Role;
 import com.dubbi.blogplatform.common.domain.entity.BaseEntity;
 import com.dubbi.blogplatform.enumeratedClasses.SocialType;
@@ -62,5 +63,12 @@ public class User extends BaseEntity {
 
     public void updateRefreshToken(String updateRefreshToken) {
         this.refreshToken = updateRefreshToken;
+    }
+
+    public void oauthEnrollUpdate(OAuthEnrollDto oAuthEnrollDto){
+        this.email = oAuthEnrollDto.getEmail();
+        this.age = oAuthEnrollDto.getAge();
+        this.city = oAuthEnrollDto.getCity();
+        this.role = Role.USER;
     }
 }
