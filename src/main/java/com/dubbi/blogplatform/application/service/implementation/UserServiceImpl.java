@@ -12,13 +12,10 @@ import com.dubbi.blogplatform.enumeratedClasses.Role;
 import com.dubbi.blogplatform.enumeratedClasses.SocialType;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.crossstore.ChangeSetPersister;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
-@Transactional
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
@@ -60,7 +57,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public GetUserDto getUser(@AccessTokenUser String accessToken) {
+    public GetUserDto getUser(String accessToken) {
         User user = userRepository.findByEmail(jwtService.extractEmail(accessToken).orElseThrow()).orElseThrow();
         return GetUserDto.builder()
                 .email(user.getEmail())
