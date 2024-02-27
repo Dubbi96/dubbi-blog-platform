@@ -6,7 +6,6 @@ import com.dubbi.blogplatform.domain.entity.User;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -31,6 +30,7 @@ public class PostQueryRepository {
                 .where(notDeleted().and(eqUser(creator)).and(post.id.eq(postId)))
                 .fetchOne();
     }
+
     public BooleanExpression notDeleted(){
         return post.is_deactivated.isFalse();
     }

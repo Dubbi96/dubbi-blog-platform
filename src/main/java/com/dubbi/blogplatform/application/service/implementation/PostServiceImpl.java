@@ -3,7 +3,7 @@ package com.dubbi.blogplatform.application.service.implementation;
 import com.dubbi.blogplatform.application.dto.CreatePostDto;
 import com.dubbi.blogplatform.application.dto.GetAllPostDto;
 import com.dubbi.blogplatform.application.dto.GetPostDto;
-import com.dubbi.blogplatform.application.dto.UpdatePostDto;
+import com.dubbi.blogplatform.application.dto.UpdatePostDetailDto;
 import com.dubbi.blogplatform.application.service.JwtService;
 import com.dubbi.blogplatform.application.service.PostService;
 import com.dubbi.blogplatform.domain.entity.Post;
@@ -94,18 +94,36 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public void updatePost(String accessToken, UpdatePostDto updatePostDto) {
-
+    public void updatePostDetail(String accessToken, UpdatePostDetailDto updatePostDetailDto, Long id) {
+        Post post = Post.builder()
+                .id(id)
+                .creator(findUserByAccessToken(accessToken))
+                .title(updatePostDetailDto.getTitle())
+                .content(updatePostDetailDto.getContent())
+                .createTs(LocalDateTime.now())
+                .is_deactivated(false)
+                .build();
+        postRepository.save(post);
+        if(!updatePostDetailDto.getPostImage().isEmpty()) {
+            for (String postImage : updatePostDetailDto.getPostImage()) {
+                PostImage temporalPostImage = PostImage.builder()
+                        .file_name(postImage)
+                        .post(post).build();
+                postImageRepository.save(temporalPostImage);
+            }
+        }
     }
 
     @Override
     public Long deactivatePost(String accessToken, Long postId) {
-        return null;
+        postRepository.deactivatePostById(postId);
+        return postId;
     }
 
     @Override
     public Long deletePost(String accessToken, Long postId) {
-        return null;
+        postRepository.deletePostById(postId);
+        return postId;
     }
 
     private User findUserByAccessToken(String accessToken){

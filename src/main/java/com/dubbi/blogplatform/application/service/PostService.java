@@ -3,8 +3,7 @@ package com.dubbi.blogplatform.application.service;
 import com.dubbi.blogplatform.application.dto.CreatePostDto;
 import com.dubbi.blogplatform.application.dto.GetAllPostDto;
 import com.dubbi.blogplatform.application.dto.GetPostDto;
-import com.dubbi.blogplatform.application.dto.UpdatePostDto;
-import com.dubbi.blogplatform.aspect.AccessTokenUser;
+import com.dubbi.blogplatform.application.dto.UpdatePostDetailDto;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,7 +16,7 @@ public interface PostService {
 
     GetPostDto getPost(String accessToken, Long id);
 
-    void updatePost(String accessToken, UpdatePostDto updatePostDto);
+    void updatePostDetail(String accessToken, UpdatePostDetailDto updatePostDetailDto, Long id);
 
     Long deactivatePost(String accessToken, Long postId);
 

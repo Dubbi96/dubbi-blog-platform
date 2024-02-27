@@ -35,3 +35,9 @@ out/
 
 ### VS Code ###
 .vscode/
+
+### application property ###
+/resources/applcation-datasource.yml
+/resources/applcation-jwt.yml
+/resources/applcation-oauth.yml
+/resources/applcation-ssl.yml
