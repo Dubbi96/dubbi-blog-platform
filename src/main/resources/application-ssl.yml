@@ -1,6 +1,0 @@
-server:
-  ssl:
-    key-store: classpath:keystore.p12
-    key-store-password: kang8349
-    keyStoreType: PKCS12
-    keyAlias: spring
