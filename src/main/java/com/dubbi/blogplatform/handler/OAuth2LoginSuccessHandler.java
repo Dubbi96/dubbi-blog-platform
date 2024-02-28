@@ -2,9 +2,7 @@ package com.dubbi.blogplatform.handler;
 
 import com.dubbi.blogplatform.application.dto.CustomOAuth2User;
 import com.dubbi.blogplatform.application.service.JwtService;
-import com.dubbi.blogplatform.domain.repository.UserRepository;
 import com.dubbi.blogplatform.enumeratedClasses.Role;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -21,11 +19,10 @@ import java.io.IOException;
 public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
 
     private final JwtService jwtService;
-    private final UserRepository userRepository;
     private final String BASE_URL = "http://localhost:9002";
 
     @Override
-    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
+    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
         log.info("OAuth2 Login 성공");
         try{
             CustomOAuth2User oAuth2User = (CustomOAuth2User) authentication.getPrincipal();
@@ -51,6 +48,7 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
         String refreshToken = jwtService.createRefreshToken();
         response.addHeader(jwtService.getAccessHeader(), "Bearer " + accessToken);
         response.addHeader(jwtService.getRefreshHeader(), "Bearer " + refreshToken);
+        response.sendRedirect(BASE_URL+"/post.html");
 
         jwtService.sendAccessAndRefreshToken(response, accessToken, refreshToken);
         log.info("계정 이메일 : {} " , oAuth2User.getEmail());

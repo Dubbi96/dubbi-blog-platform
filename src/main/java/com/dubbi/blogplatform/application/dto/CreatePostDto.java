@@ -4,8 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-
-import java.util.List;
+import org.springframework.web.multipart.MultipartFile;
 
 @RequiredArgsConstructor
 @AllArgsConstructor
@@ -14,6 +13,6 @@ import java.util.List;
 public class CreatePostDto {
     private String title;
     private String content;
-    private List<String> postImage;
+    private MultipartFile[] postImage;
     private Long postCategoryId;
 }

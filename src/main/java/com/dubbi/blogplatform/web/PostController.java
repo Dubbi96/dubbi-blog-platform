@@ -7,19 +7,30 @@ import com.dubbi.blogplatform.application.dto.UpdatePostDetailDto;
 import com.dubbi.blogplatform.application.service.PostService;
 import com.dubbi.blogplatform.aspect.AccessTokenUser;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Arrays;
 import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
+@Slf4j
 public class PostController {
     private final PostService postService;
 
     @PostMapping("/post")
-    public ResponseEntity<String> createPost(@AccessTokenUser String accessToken, @RequestBody CreatePostDto createPostDto){
-        postService.createPost(accessToken,createPostDto);
+    public ResponseEntity<String> createPost(
+            @AccessTokenUser String accessToken,
+            @RequestParam("title") String title,
+            @RequestParam("content") String content,
+            @RequestParam("postCategoryId") Long postCategoryId,
+            @RequestParam("postImage") MultipartFile[] postImage) {
+        CreatePostDto createPostDto = new CreatePostDto(title, content, postImage, postCategoryId);
+        postService.createPost(accessToken, createPostDto);
         return ResponseEntity.ok("Post saved");
     }
 

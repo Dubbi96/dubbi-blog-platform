@@ -22,7 +22,7 @@ public class QPostImage extends EntityPathBase<PostImage> {
 
     public static final QPostImage postImage = new QPostImage("postImage");
 
-    public final StringPath file_name = createString("file_name");
+    public final StringPath fileName = createString("fileName");
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 

@@ -16,7 +16,7 @@ public class PostImage {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
-    private String file_name;
+    private String fileName;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "POST_ID")
