@@ -3,4 +3,4 @@
 #/src/main/resources/application-oauth.yml
 #/src/main/resources/application-ssl.yml
 #/src/main/resources/application-datasource.yml
-#/src/main/resources/keystore.p12
+#/src/main/resourgces/keystore.p12
