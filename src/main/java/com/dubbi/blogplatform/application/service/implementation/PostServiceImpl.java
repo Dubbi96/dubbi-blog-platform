@@ -10,6 +10,7 @@ import com.dubbi.blogplatform.domain.repository.*;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.*;
@@ -29,6 +30,9 @@ import java.util.List;
 @Service
 @Slf4j
 public class PostServiceImpl implements PostService {
+
+    @Value("${imageserver.url}")
+    private String IMAGE_SERVER_BASE_URL;
 
     private final PostRepository postRepository;
     private final PostQueryRepository postQueryRepository;
@@ -65,7 +69,7 @@ public class PostServiceImpl implements PostService {
     }
 
     private String uploadImageToServer(MultipartFile file) throws IOException {
-        String url = "http://3.39.254.153:9003/images/upload";
+        String url = IMAGE_SERVER_BASE_URL+"/images/upload";
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.MULTIPART_FORM_DATA);
 
@@ -129,24 +133,36 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
+    @Transactional
     public void updatePostDetail(String accessToken, UpdatePostDetailDto updatePostDetailDto, Long id) {
-        Post post = Post.builder()
-                .id(id)
-                .creator(findUserByAccessToken(accessToken))
-                .title(updatePostDetailDto.getTitle())
-                .content(updatePostDetailDto.getContent())
-                .createTs(LocalDateTime.now())
-                .is_deactivated(false)
-                .build();
-        postRepository.save(post);
-        if(!updatePostDetailDto.getPostImage().isEmpty()) {
-            for (String postImage : updatePostDetailDto.getPostImage()) {
-                PostImage temporalPostImage = PostImage.builder()
-                        .fileName(postImage)
-                        .post(post).build();
-                postImageRepository.save(temporalPostImage);
+        // 1. 기존 포스트 조회 및 업데이트
+        Post post = postRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Post not found"));
+        post.updateDetails(updatePostDetailDto.getTitle(), updatePostDetailDto.getContent());
+
+        // 2. 이미지 삭제 처리
+        if (updatePostDetailDto.getDeleteImageIds() != null) {
+            for (Long imageId : updatePostDetailDto.getDeleteImageIds()) {
+                postImageRepository.deleteById(imageId);
             }
         }
+
+        // 3. 신규 이미지 추가 처리
+        if (updatePostDetailDto.getNewPostImages() != null) {
+            for (MultipartFile file : updatePostDetailDto.getNewPostImages()) {
+                if (!file.isEmpty()) {
+                    try {
+                        String imageUrl = uploadImageToServer(file);
+                        PostImage newImage = PostImage.builder().fileName(imageUrl).post(post).build();
+                        postImageRepository.save(newImage);
+                    } catch (IOException e) {
+                        log.error("Failed to upload image", e);
+                    }
+                }
+            }
+        }
+
+        // 4. 포스트 저장
+        postRepository.save(post);
     }
 
     @Override

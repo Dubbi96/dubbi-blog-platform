@@ -115,9 +115,9 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
         log.info("checkAccessTokenAndAuthentication() 호출");
         jwtService.extractAccessToken(request)
                 .filter(jwtService::isTokenValid)
-                .ifPresent(accessToken -> jwtService.extractEmail(accessToken)
-                        .ifPresent(email -> userRepository.findByEmail(email)
-                                .ifPresent(this::saveAuthentication)));
+                .flatMap(accessToken -> jwtService.extractEmail(accessToken)
+                        .flatMap(userRepository::findByEmail))
+                .ifPresent(this::saveAuthentication);
 
         filterChain.doFilter(request, response);
     }

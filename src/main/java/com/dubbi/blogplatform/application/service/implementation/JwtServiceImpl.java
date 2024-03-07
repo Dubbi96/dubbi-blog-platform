@@ -67,7 +67,6 @@ public class JwtServiceImpl implements JwtService {
     private static final String ACCESS_TOKEN_SUBJECT = "AccessToken";
     private static final String REFRESH_TOKEN_SUBJECT = "RefreshToken";
     private static final String EMAIL_CLAIM = "email";
-    private static final String NICKNAME_CLAIM = "nickname";
     private static final String BEARER = "Bearer ";
 
     private final UserRepository userRepository;
@@ -201,7 +200,7 @@ public class JwtServiceImpl implements JwtService {
     /**
      * RefreshToken DB 저장(업데이트)
      */
-    public void updateRefreshToken(String email, String refreshToken) {
+    public void updateRefreshToken(String email, String refreshToken){
         userRepository.findByEmail(email)
                 .ifPresentOrElse(
                         user -> {user.updateRefreshToken(refreshToken);

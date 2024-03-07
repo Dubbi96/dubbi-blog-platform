@@ -46,7 +46,13 @@ public class PostController {
     }
 
     @PutMapping("/post/{id}")
-    public ResponseEntity<String> updatePostDetail(@AccessTokenUser String accessToken, @RequestBody UpdatePostDetailDto updatePostDetailDto,@PathVariable Long id){
+    public ResponseEntity<String> updatePostDetail(@AccessTokenUser String accessToken,
+                                                   @RequestParam("title") String title,
+                                                   @RequestParam("content") String content,
+                                                   @RequestParam("deletedImageIds") List<Long> deleteImageId,
+                                                   @RequestParam("newPostImages") List<MultipartFile> newPostImages,
+                                                   @PathVariable Long id){
+        UpdatePostDetailDto updatePostDetailDto = new UpdatePostDetailDto(title,content,deleteImageId,newPostImages);
         postService.updatePostDetail(accessToken,updatePostDetailDto,id);
         return ResponseEntity.ok("Post successfully updated");
     }

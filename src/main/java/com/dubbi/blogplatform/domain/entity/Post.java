@@ -41,4 +41,13 @@ public class Post extends BaseEntity {
     @OneToMany(mappedBy = "post",fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     private List<PostImage> postImage;
 
+    public void updateDetails(String title, String content) {
+        if (title != null && !title.isEmpty()) {
+            this.title = title;
+        }
+        if (content != null && !content.isEmpty()) {
+            this.content = content;
+        }
+    }
+
 }
