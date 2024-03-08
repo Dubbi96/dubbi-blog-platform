@@ -22,6 +22,13 @@ ext {
 	set('generated', file('src/main/generated'))
 }
 
+sonar {
+	properties {
+		property "sonar.projectKey", "Dubbi96_dubbi-blog-platform_e741ee9b-915b-4972-b0f8-b0e2288a01fa"
+		property "sonar.projectName", "dubbi-blog-platform"
+	}
+}
+
 dependencies {
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
