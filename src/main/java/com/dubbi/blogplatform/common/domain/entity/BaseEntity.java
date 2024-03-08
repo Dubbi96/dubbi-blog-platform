@@ -20,7 +20,7 @@ import java.time.LocalDateTime;
 public class BaseEntity {
     @Id
     @Column(name = "ID")
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @CreatedDate
