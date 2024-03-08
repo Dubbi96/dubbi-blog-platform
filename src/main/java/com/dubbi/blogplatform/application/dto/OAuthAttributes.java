@@ -1,8 +1,8 @@
 package com.dubbi.blogplatform.application.dto;
 
 import com.dubbi.blogplatform.domain.entity.User;
-import com.dubbi.blogplatform.enumeratedClasses.Role;
-import com.dubbi.blogplatform.enumeratedClasses.SocialType;
+import com.dubbi.blogplatform.enumeratedclasses.Role;
+import com.dubbi.blogplatform.enumeratedclasses.SocialType;
 import lombok.Builder;
 import lombok.Getter;
 

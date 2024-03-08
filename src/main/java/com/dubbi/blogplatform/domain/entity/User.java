@@ -1,9 +1,9 @@
 package com.dubbi.blogplatform.domain.entity;
 
 import com.dubbi.blogplatform.application.dto.OAuthEnrollDto;
-import com.dubbi.blogplatform.enumeratedClasses.Role;
+import com.dubbi.blogplatform.enumeratedclasses.Role;
 import com.dubbi.blogplatform.common.domain.entity.BaseEntity;
-import com.dubbi.blogplatform.enumeratedClasses.SocialType;
+import com.dubbi.blogplatform.enumeratedclasses.SocialType;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;

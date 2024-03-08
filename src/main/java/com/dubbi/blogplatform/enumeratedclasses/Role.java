@@ -1,4 +1,4 @@
-package com.dubbi.blogplatform.enumeratedClasses;
+package com.dubbi.blogplatform.enumeratedclasses;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

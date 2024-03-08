@@ -32,7 +32,7 @@ public class Post extends BaseEntity {
     private int view;
 
     @Column(name = "IS_DEACTIVATED")
-    private boolean is_deactivated;
+    private boolean isDeactivated;
 
     @JoinColumn(name = "POST_CATEGORY")
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)

@@ -2,7 +2,7 @@ package com.dubbi.blogplatform.handler;
 
 import com.dubbi.blogplatform.application.dto.CustomOAuth2User;
 import com.dubbi.blogplatform.application.service.JwtService;
-import com.dubbi.blogplatform.enumeratedClasses.Role;
+import com.dubbi.blogplatform.enumeratedclasses.Role;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +19,7 @@ import java.io.IOException;
 public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
 
     private final JwtService jwtService;
-    private final String BASE_URL = "http://localhost:9002";
+    private static final String BASE_URL = "http://localhost:9002";
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
@@ -30,7 +30,7 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
             //User의 Role이 GUEST일 경우 처음 요청한 회원이므로 회원가입 페이지로 리다이렉트
             if(oAuth2User.getRole() == Role.GUEST){
                 String accessToken = jwtService.createAccessToken(oAuth2User.getEmail());
-                response.addHeader(jwtService.getAccessHeader(),"Bearer " + accessToken);
+                response.addHeader(jwtService.getAccessHeader(),tokenToHeader(accessToken));
                 response.sendRedirect(BASE_URL+"/signup.html"); //프론트 회원가입 추가 정보 입력 form으로 redirect
 
                 jwtService.sendAccessAndRefreshToken(response, accessToken, null);
@@ -38,20 +38,23 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
                 loginSuccess(response, oAuth2User);
             }
         }catch (Exception e){
-            throw e;
+            throw new IOException("cannot get principals from authentication " + e);
         }
     }
 
-    // TODO : 소셜 로그인 시에도 무조건 토큰 생성하지 말고 JWT 인증 필터처럼 RefreshToken 유/무에 따라 다르게 처리해보기
     private void loginSuccess(HttpServletResponse response, CustomOAuth2User oAuth2User) throws IOException {
         String accessToken = jwtService.createAccessToken(oAuth2User.getEmail());
         String refreshToken = jwtService.createRefreshToken();
-        response.addHeader(jwtService.getAccessHeader(), "Bearer " + accessToken);
-        response.addHeader(jwtService.getRefreshHeader(), "Bearer " + refreshToken);
+        response.addHeader(jwtService.getAccessHeader(), tokenToHeader(accessToken));
+        response.addHeader(jwtService.getRefreshHeader(), tokenToHeader(refreshToken));
         response.sendRedirect(BASE_URL+"/post.html");
 
         jwtService.sendAccessAndRefreshToken(response, accessToken, refreshToken);
         log.info("계정 이메일 : {} " , oAuth2User.getEmail());
         jwtService.updateRefreshToken(oAuth2User.getEmail(),refreshToken);
+    }
+
+    private String tokenToHeader(String token){
+        return "Bearer " + token;
     }
 }

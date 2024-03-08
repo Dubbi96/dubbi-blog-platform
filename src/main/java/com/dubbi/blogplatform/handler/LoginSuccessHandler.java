@@ -19,7 +19,7 @@ public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
     private final JwtService jwtService;
     private final UserRepository userRepository;
-    private final String BASE_URL = "http://localhost:9002";
+    private final static String BASE_URL = "http://localhost:9002";
 
     @Value("${jwt.access.expiration}")
     private String accessTokenExpiration;

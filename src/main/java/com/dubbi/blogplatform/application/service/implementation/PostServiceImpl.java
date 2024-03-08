@@ -51,7 +51,7 @@ public class PostServiceImpl implements PostService {
                 .title(createPostDto.getTitle())
                 .content(createPostDto.getContent())
                 .createTs(LocalDateTime.now())
-                .is_deactivated(false)
+                .isDeactivated(false)
                 .postCategory(postCategoryRepository.findById(createPostDto.getPostCategoryId()).orElseThrow())
                 .build();
         postRepository.save(post);
@@ -63,7 +63,7 @@ public class PostServiceImpl implements PostService {
                     .post(post).build();
             postImageRepository.save(temporalPostImage);
             } catch (IOException e) {
-                log.error("Cannot upload this type of file", e);
+                log.error("Cannot upload this type of file or image server is not responding", e);
             }
         }
     }
@@ -85,10 +85,16 @@ public class PostServiceImpl implements PostService {
         HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
 
         ResponseEntity<GetImageToServerResponseDto> response = restTemplate.postForEntity(url, requestEntity, GetImageToServerResponseDto.class);
-        if (response.getStatusCode() == HttpStatus.CREATED && response.getBody() != null) {
-            return response.getBody().getUrl(); // URL만 추출하여 반환
-        } else {
-            throw new IOException("Image upload failed with status: " + response.getStatusCode());
+        try{
+            if (response.getStatusCode() == HttpStatus.CREATED && response.getBody() != null) {
+                return response.getBody().getUrl(); // URL만 추출하여 반환
+            } else {
+                throw new IOException("Image upload failed with status: " + response.getStatusCode());
+            }
+            //Body가 null을 반환할 수 있으므로, 해당 경우 image server가 닫혀있다 판단하며, IOException으로 변환
+        }catch (NullPointerException e){
+            log.error("Image server is not responding : " + response.getStatusCode());
+            throw new IOException("Image server is not responding : " + response.getStatusCode());
         }
     }
 

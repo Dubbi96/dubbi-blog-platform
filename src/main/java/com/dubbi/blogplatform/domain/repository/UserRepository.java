@@ -1,7 +1,7 @@
 package com.dubbi.blogplatform.domain.repository;
 
 import com.dubbi.blogplatform.domain.entity.User;
-import com.dubbi.blogplatform.enumeratedClasses.SocialType;
+import com.dubbi.blogplatform.enumeratedclasses.SocialType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

@@ -7,10 +7,13 @@ public class NaverOAuth2UserInfo extends OAuth2UserInfo{
     public NaverOAuth2UserInfo(Map<String, Object> attributes) {
         super(attributes);
     }
+    private Map<String,Object> getResponse(){
+        return (Map<String, Object>) attributes.get("response");
+    }
 
     @Override
     public String getId() {
-        Map<String, Object> response = (Map<String, Object>) attributes.get("response");
+        Map<String, Object> response = getResponse();
 
         if(response == null){
             return null;
@@ -21,7 +24,7 @@ public class NaverOAuth2UserInfo extends OAuth2UserInfo{
 
     @Override
     public String getNickname() {
-        Map<String, Object> response = (Map<String, Object>) attributes.get("response");
+        Map<String, Object> response = getResponse();
 
         if(response == null){
             return null;
@@ -32,7 +35,7 @@ public class NaverOAuth2UserInfo extends OAuth2UserInfo{
 
     @Override
     public String getImageUrl() {
-        Map<String, Object> response = (Map<String, Object>) attributes.get("response");
+        Map<String, Object> response = getResponse();
 
         if(response == null){
             return null;

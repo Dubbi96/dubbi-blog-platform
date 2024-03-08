@@ -12,9 +12,9 @@ public enum HttpStatusEnum {
     FORBIDDEN(403,"FORBIDDEN",HttpStatus.FORBIDDEN),
     INTERNAL_SERVER_ERROR(500,"INTERNAL_SERVER_ERROR", HttpStatus.INTERNAL_SERVER_ERROR);
 
-    public int statusCode;
-    String code;
-    HttpStatus status;
+    private final int statusCode;
+    final String code;
+    final HttpStatus status;
 
     HttpStatusEnum(int statusCode, String code, HttpStatus status) {
         this.statusCode = statusCode;

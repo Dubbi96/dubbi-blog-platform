@@ -46,28 +46,31 @@ public class SecurityConfig {
     private final OAuth2LoginFailureHandler oAuth2LoginFailureHandler;
     private final CustomOAuth2UserService customOAuth2UserService;
 
+    /**
+     * filterChain에서 사용하는 Lambda 표현 중 변수가 다회 사용이 아니라면 bracket에서 빼서 사용 (cors) -> x => cors -> x
+     * */
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
         http
-                .cors((cors) -> cors.configurationSource(corsConfigurationSource()))
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(AbstractHttpConfigurer::disable) // csrf 보안 사용 X
                 .formLogin(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable) // httpBasic 사용 X
                 // 세션 사용하지 않으므로 STATELESS로 설정
-                .headers((headers)
+                .headers(headers
                         -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
-                .sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authorizeHttpRequests((authorizeRequest)
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authorizeHttpRequests(authorizeRequest
                         -> authorizeRequest
                         .requestMatchers("/","/css/**","/images/**","/js/**","/favicon.ico","/h2-console/**").permitAll()
                         .requestMatchers("/sign-up").permitAll()
                         .anyRequest().authenticated())
                 //== 소셜 로그인 설정 ==//
-                .oauth2Login((oauth)
+                .oauth2Login(oauth
                         -> oauth
                         .successHandler(oAuth2LoginSuccessHandler) // 동의하고 계속하기를 눌렀을 때 Handler 설정
                         .failureHandler(oAuth2LoginFailureHandler) // 소셜 로그인 실패 시 핸들러 설정
-                        .userInfoEndpoint((endpoint)
+                        .userInfoEndpoint(endpoint
                                 -> endpoint.userService(customOAuth2UserService))); // customUserService 설정
 
         // 원래 스프링 시큐리티 필터 순서가 LogoutFilter 이후에 로그인 필터 동작

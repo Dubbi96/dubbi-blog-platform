@@ -18,7 +18,7 @@ public class SubComment extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     @JoinColumn(name = "COMMENT_ID")
-    private Comment CommentId;
+    private Comment commentId;
 
     @Column(name = "TEXT")
     private String text;
