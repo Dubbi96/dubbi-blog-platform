@@ -32,7 +32,7 @@ public class PostQueryRepository {
     }
 
     public BooleanExpression notDeleted(){
-        return post.is_deactivated.isFalse();
+        return post.isDeactivated.isFalse();
     }
     public BooleanExpression eqUser(User creator){
         return post.creator.id.eq(creator.getId());
