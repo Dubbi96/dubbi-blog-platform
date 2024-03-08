@@ -2,5 +2,5 @@
 
 #/src/main/resources/application-oauth.yml
 #/src/main/resources/application-ssl.yml
-#/src/main/resources/application-datasource.yml
+#/src/main/resources/application-datasource-local.yml
 #/src/main/resourgces/keystore.p12

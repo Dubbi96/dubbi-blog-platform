@@ -6,7 +6,12 @@ server:
 
 spring:
   profiles:
-    include: jwt, oauth, ssl, datasource, imageserver #포함시킬 application files 나열
+    include: jwt, 
+            oauth, 
+            ssl, 
+            #datasource-local, 
+            datasource-dev, 
+            imageserver #포함시킬 application files 나열
 
   main:
     allow-bean-definition-overriding: true
