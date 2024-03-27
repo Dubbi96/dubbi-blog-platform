@@ -13,7 +13,7 @@ public class GetUserDto {
     private String email;
     private String nickname;
     private String picture;
-    private int age;
+    private long age;
     private String city;
     private String socialId;
 }

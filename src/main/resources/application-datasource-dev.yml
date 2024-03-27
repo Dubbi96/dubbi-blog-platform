@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:mysql://15.164.103.176:3306/DUBBI?allowPublicKeyRetrieval=true&useSSL=false
+    url: jdbc:mysql://54.180.94.42:3306/DUBBI?allowPublicKeyRetrieval=true&useSSL=false
     username: DUBBI
     password: 8349
     driver-class-name: com.mysql.cj.jdbc.Driver

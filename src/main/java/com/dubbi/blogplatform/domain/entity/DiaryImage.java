@@ -13,8 +13,8 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "post_image")
-public class PostImage {
+@Table(name = "diary_image")
+public class DiaryImage {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,8 +25,8 @@ public class PostImage {
     private Image image;
 
     @ManyToOne
-    @JoinColumn(name = "post_id", nullable = false)
-    private Post post;
+    @JoinColumn(name = "diary_id", nullable = false)
+    private Diary diary;
 
     @Column(name = "sequence")
     private Long sequence;

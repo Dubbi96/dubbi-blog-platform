@@ -1,5 +1,6 @@
 package com.dubbi.blogplatform.application.dto;
 
+import com.dubbi.blogplatform.domain.entity.Image;
 import com.dubbi.blogplatform.domain.entity.User;
 import com.dubbi.blogplatform.enumeratedclasses.Role;
 import com.dubbi.blogplatform.enumeratedclasses.SocialType;
@@ -76,7 +77,7 @@ public class OAuthAttributes {
                 .socialId(oauth2UserInfo.getId())
                 .email(UUID.randomUUID() + "@socialUser.com")
                 .nickname(oauth2UserInfo.getNickname())
-                .picture(oauth2UserInfo.getImageUrl())
+                .profilePicture(Image.builder().url(oauth2UserInfo.getImageUrl()).build())
                 .role(Role.USER)
                 .build();
     }

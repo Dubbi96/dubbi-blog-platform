@@ -1,26 +1,30 @@
 package com.dubbi.blogplatform.domain.entity;
 
+import com.dubbi.blogplatform.common.domain.entity.BaseEntity;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.experimental.SuperBuilder;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-@Entity
 @Getter
-@Builder
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "POST_CATEGORY")
+@Setter
+@Entity
+@Table(name = "post_category")
+@NoArgsConstructor
 @AllArgsConstructor
-public class PostCategory {
+@SuperBuilder
+@EntityListeners(AuditingEntityListener.class)
+public class PostCategory extends BaseEntity {
 
-    @Id
-    @Column(name = "ID")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @Column(name = "CATEGORY_NAME")
+    @Column(name = "category_name")
     private String categoryName;
 
-    @JoinColumn(name = "PARENT_ID")
-    @ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
-    private PostCategory parentCategory;
+    @ManyToOne
+    @JoinColumn(name = "parent_id", nullable = true) // 변경: 부모 카테고리가 없을 수도 있으므로 nullable = true
+    private PostCategory parent;
 
+    // Getters and setters...
 }

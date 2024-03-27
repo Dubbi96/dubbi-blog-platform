@@ -2,46 +2,44 @@ package com.dubbi.blogplatform.domain.entity;
 
 import com.dubbi.blogplatform.common.domain.entity.BaseEntity;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.SuperBuilder;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import java.util.List;
-
-@Entity
 @Getter
-@SuperBuilder
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "POST")
+@Setter
+@Entity
+@Table(name = "post")
+@NoArgsConstructor
 @AllArgsConstructor
+@SuperBuilder
+@EntityListeners(AuditingEntityListener.class)
 public class Post extends BaseEntity {
 
-    @JoinColumn(name = "CREATOR")
-    @ManyToOne(fetch = FetchType.LAZY)
-    private User creator;
-
-    @Column(name = "TITLE")
-    private String title;
-
-    @Column(name = "CONTENT")
-    private String content;
-
-    @Column(name = "VIEWS")
-    private int view;
-
-    @Column(name = "IS_DEACTIVATED")
-    private boolean isDeactivated;
-
-    @JoinColumn(name = "POST_CATEGORY")
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne
+    @JoinColumn(name = "post_category", nullable = false)
     private PostCategory postCategory;
 
-    @OneToMany(mappedBy = "post",fetch = FetchType.LAZY,cascade = CascadeType.ALL)
-    private List<PostImage> postImage;
+    @ManyToOne
+    @JoinColumn(name = "creator", nullable = false)
+    private User creator;
 
-    public void updateDetails(String title, String content) {
+    @Column(name = "title")
+    private String title;
+
+    @Column(name = "content")
+    private String content;
+
+    @Column(name = "is_deactivated")
+    private Boolean isDeactivated;
+
+    @Column(name = "views")
+    private Long views;
+
+public void updateDetails(String title, String content) {
         if (title != null && !title.isEmpty()) {
             this.title = title;
         }

@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 public class GetAllPostDto {
     private String title;
     private Long creatorId;
-    private int views;
+    private long views;
     private LocalDateTime createTs;
     private Long postCategoryId;
 }

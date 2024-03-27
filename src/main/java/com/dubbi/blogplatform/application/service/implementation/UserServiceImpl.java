@@ -60,7 +60,7 @@ public class UserServiceImpl implements UserService {
         return GetUserDto.builder()
                 .email(user.getEmail())
                 .nickname(user.getNickname())
-                .picture(user.getPicture())
+                .picture(user.getProfilePicture().getUrl())
                 .age(user.getAge())
                 .city(user.getCity())
                 .socialId(user.getSocialId()).build();

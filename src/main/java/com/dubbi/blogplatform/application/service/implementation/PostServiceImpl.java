@@ -3,6 +3,7 @@ package com.dubbi.blogplatform.application.service.implementation;
 import com.dubbi.blogplatform.application.dto.*;
 import com.dubbi.blogplatform.application.service.JwtService;
 import com.dubbi.blogplatform.application.service.PostService;
+import com.dubbi.blogplatform.domain.entity.Image;
 import com.dubbi.blogplatform.domain.entity.Post;
 import com.dubbi.blogplatform.domain.entity.PostImage;
 import com.dubbi.blogplatform.domain.entity.User;
@@ -39,6 +40,7 @@ public class PostServiceImpl implements PostService {
     private final PostCategoryRepository postCategoryRepository;
     private final PostImageQueryRepository postImageQueryRepository;
     private final PostImageRepository postImageRepository;
+    private final ImageRepository imageRepository;
     private final UserRepository userRepository;
     private final JwtService jwtService;
     private final RestTemplate restTemplate;
@@ -54,21 +56,28 @@ public class PostServiceImpl implements PostService {
                 .isDeactivated(false)
                 .postCategory(postCategoryRepository.findById(createPostDto.getPostCategoryId()).orElseThrow())
                 .build();
-        postRepository.save(post);
+        Post newPost = postRepository.save(post);
+        long imageSeq = 0;
         for (MultipartFile file : createPostDto.getPostImage()) {
             try {
-                String imageUrl = uploadImageToServer(file); // 이미지를 업로드하고 URL을 받음
-            PostImage temporalPostImage = PostImage.builder()
-                    .fileName(imageUrl) // URL을 저장
-                    .post(post).build();
-            postImageRepository.save(temporalPostImage);
+                GetImageToServerResponseDto imageUrl = uploadImageToServer(file); // 이미지를 업로드하고 URL을 받음
+                Image temporalImage = Image.builder()
+                    .fileName(imageUrl.getName()) // URL을 저장
+                    .url(imageUrl.getUrl())
+                    .build();
+                Image newImage = imageRepository.save(temporalImage);
+                PostImage newPostImage = PostImage.builder()
+                        .image(newImage)
+                        .post(newPost)
+                        .sequence(imageSeq++).build();
+                postImageRepository.save(newPostImage);
             } catch (IOException e) {
                 log.error("Cannot upload this type of file or image server is not responding", e);
             }
         }
     }
 
-    private String uploadImageToServer(MultipartFile file) throws IOException {
+    private GetImageToServerResponseDto uploadImageToServer(MultipartFile file) throws IOException {
         String url = IMAGE_SERVER_BASE_URL+"/images/upload";
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.MULTIPART_FORM_DATA);
@@ -87,7 +96,7 @@ public class PostServiceImpl implements PostService {
         ResponseEntity<GetImageToServerResponseDto> response = restTemplate.postForEntity(url, requestEntity, GetImageToServerResponseDto.class);
         try{
             if (response.getStatusCode() == HttpStatus.CREATED && response.getBody() != null) {
-                return response.getBody().getUrl(); // URL만 추출하여 반환
+                return response.getBody(); // URL만 추출하여 반환
             } else {
                 throw new IOException("Image upload failed with status: " + response.getStatusCode());
             }
@@ -105,7 +114,7 @@ public class PostServiceImpl implements PostService {
             GetAllPostDto tempPostDto = GetAllPostDto.builder()
                     .title(post.getTitle())
                     .creatorId(post.getCreator().getId())
-                    .views(post.getView())
+                    .views(post.getViews())
                     .createTs(post.getCreateTs())
                     .postCategoryId(post.getPostCategory().getId()).build();
             response.add(tempPostDto);
@@ -122,18 +131,18 @@ public class PostServiceImpl implements PostService {
             return GetPostDto.builder()
                     .title(post.getTitle())
                     .content(post.getContent())
-                    .views(post.getView())
+                    .views(post.getViews())
                     .creatorId(post.getCreator().getId())
                     .build();
         }
         for(PostImage image : postImage){
-            postImageToString.add(image.getFileName());
+            postImageToString.add(image.getImage().getUrl());
         }
         return GetPostDto.builder()
                 .title(post.getTitle())
                 .content(post.getContent())
                 .postImages(postImageToString)
-                .views(post.getView())
+                .views(post.getViews())
                 .creatorId(post.getCreator().getId())
                 .build();
     }
@@ -144,29 +153,35 @@ public class PostServiceImpl implements PostService {
         // 1. 기존 포스트 조회 및 업데이트
         Post post = postRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Post not found"));
         post.updateDetails(updatePostDetailDto.getTitle(), updatePostDetailDto.getContent());
-
         // 2. 이미지 삭제 처리
         if (updatePostDetailDto.getDeleteImageIds() != null) {
             for (Long imageId : updatePostDetailDto.getDeleteImageIds()) {
                 postImageRepository.deleteById(imageId);
             }
         }
-
         // 3. 신규 이미지 추가 처리
         if (updatePostDetailDto.getNewPostImages() != null) {
+            long imageSeq = 0;
             for (MultipartFile file : updatePostDetailDto.getNewPostImages()) {
                 if (!file.isEmpty()) {
                     try {
-                        String imageUrl = uploadImageToServer(file);
-                        PostImage newImage = PostImage.builder().fileName(imageUrl).post(post).build();
-                        postImageRepository.save(newImage);
+                        GetImageToServerResponseDto imageUrl = uploadImageToServer(file);
+                        Image temporalImage = Image.builder()
+                                .fileName(imageUrl.getName()) // URL을 저장
+                                .url(imageUrl.getUrl())
+                                .build();
+                        Image newImage = imageRepository.save(temporalImage);
+                        PostImage newPostImage = PostImage.builder()
+                                .post(post)
+                                .image(newImage)
+                                .sequence(imageSeq++).build();
+                        postImageRepository.save(newPostImage);
                     } catch (IOException e) {
                         log.error("Failed to upload image", e);
                     }
                 }
             }
         }
-
         // 4. 포스트 저장
         postRepository.save(post);
     }

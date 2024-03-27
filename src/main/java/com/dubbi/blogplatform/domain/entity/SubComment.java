@@ -2,25 +2,27 @@ package com.dubbi.blogplatform.domain.entity;
 
 import com.dubbi.blogplatform.common.domain.entity.BaseEntity;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.SuperBuilder;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-@Entity
 @Getter
+@Setter
 @SuperBuilder
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "SUB_COMMENT")
+@NoArgsConstructor
 @AllArgsConstructor
+@Entity
+@Table(name = "sub_comment")
+@EntityListeners(AuditingEntityListener.class)
 public class SubComment extends BaseEntity {
 
-    @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
-    @JoinColumn(name = "COMMENT_ID")
-    private Comment commentId;
+    @ManyToOne
+    @JoinColumn(name = "comment_id", nullable = false)
+    private Comment comment;
 
-    @Column(name = "TEXT")
+    @Column(name = "text")
     private String text;
-
 }

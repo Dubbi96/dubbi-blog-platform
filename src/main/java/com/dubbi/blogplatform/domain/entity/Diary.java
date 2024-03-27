@@ -15,14 +15,17 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "comment")
+@Table(name = "diary")
 @EntityListeners(AuditingEntityListener.class)
-public class Comment extends BaseEntity {
+public class Diary extends BaseEntity {
 
     @ManyToOne
-    @JoinColumn(name = "post_id", nullable = false)
-    private Post post;
+    @JoinColumn(name = "creator", nullable = false)
+    private User creator;
 
-    @Column(name = "text")
-    private String text;
+    @Column(name = "title")
+    private String title;
+
+    @Column(name = "content")
+    private String content;
 }

@@ -11,6 +11,6 @@ public class GetPostDto {
     private String title;
     private String content;
     private Long creatorId;
-    private int views;
+    private long views;
     private List<String> postImages;
 }

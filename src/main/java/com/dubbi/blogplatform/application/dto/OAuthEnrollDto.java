@@ -7,6 +7,6 @@ import lombok.NoArgsConstructor;
 @Getter
 public class OAuthEnrollDto {
     private String email;
-    private int age;
+    private long age;
     private String city;
 }
