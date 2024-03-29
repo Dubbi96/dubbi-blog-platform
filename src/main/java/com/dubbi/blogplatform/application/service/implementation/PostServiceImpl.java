@@ -219,9 +219,9 @@ public class PostServiceImpl implements PostService {
 
     private User findUserByAccessToken(String accessToken){
         String email = jwtService.extractEmail(accessToken)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid access token"));
+                .orElseThrow(() -> new IllegalArgumentException("Access token is either expired or invalid. Please check the token."));
 
         return userRepository.findByEmail(email)
-                .orElseThrow(() -> new IllegalArgumentException("No user with given email found"));
+                .orElseThrow(() -> new IllegalArgumentException("User with given email does not exist in the database. The email extracted from the access tokens is: " + email));
     }
 }
