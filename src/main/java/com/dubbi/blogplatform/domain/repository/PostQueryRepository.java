@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
@@ -25,10 +26,10 @@ public class PostQueryRepository {
                 .fetch();
     }
 
-    public Post findPost(User creator, Long postId){
-        return query.selectFrom(post)
+    public Optional<Post> findPost(User creator, Long postId){
+        return Optional.ofNullable(query.selectFrom(post)
                 .where(notDeleted().and(eqUser(creator)).and(post.id.eq(postId)))
-                .fetchOne();
+                .fetchOne());
     }
 
     public BooleanExpression notDeleted(){

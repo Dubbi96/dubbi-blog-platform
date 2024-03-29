@@ -3,7 +3,6 @@ package com.dubbi.blogplatform.application.service.implementation;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.dubbi.blogplatform.application.service.JwtService;
-import com.dubbi.blogplatform.domain.entity.User;
 import com.dubbi.blogplatform.domain.repository.UserRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
