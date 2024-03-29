@@ -57,11 +57,14 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-aop'
 	runtimeOnly 'com.mysql:mysql-connector-j'
 
+
 	// Testing dependencies
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
+	// Spring Test
+	testImplementation 'org.springframework:spring-test'
+	// Spring Security Test
 	testImplementation 'org.springframework.security:spring-security-test'
-	testImplementation 'junit:junit:4.13.2' // Consider updating to JUnit 5 if possible
 }
 
 // Customize test task

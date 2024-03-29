@@ -1,10 +1,11 @@
 package com.dubbi.blogplatform.application.dto;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @NoArgsConstructor
+@AllArgsConstructor
 @Getter
+@Builder
 public class UserSignUpDto {
     private String email;
     private String password;

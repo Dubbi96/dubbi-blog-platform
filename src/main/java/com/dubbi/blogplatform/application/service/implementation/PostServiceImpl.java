@@ -8,6 +8,7 @@ import com.dubbi.blogplatform.domain.entity.Post;
 import com.dubbi.blogplatform.domain.entity.PostImage;
 import com.dubbi.blogplatform.domain.entity.User;
 import com.dubbi.blogplatform.domain.repository.*;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -45,6 +46,13 @@ public class PostServiceImpl implements PostService {
     private final JwtService jwtService;
     private final RestTemplate restTemplate;
 
+    /**
+     * Creates a new post with the given access token and post information.
+     *
+     * @param accessToken the access token for the user creating the post
+     * @param createPostDto the DTO containing the post title, content, post category, and post images
+     * @throws IOException if there was an error uploading the post image
+     */
     @Override
     @Transactional
     public void createPost(String accessToken, CreatePostDto createPostDto) {
@@ -54,6 +62,7 @@ public class PostServiceImpl implements PostService {
                 .content(createPostDto.getContent())
                 .createTs(LocalDateTime.now())
                 .isDeactivated(false)
+                .views(0L)
                 .postCategory(postCategoryRepository.findById(createPostDto.getPostCategoryId()).orElseThrow())
                 .build();
         Post newPost = postRepository.save(post);
@@ -77,6 +86,13 @@ public class PostServiceImpl implements PostService {
         }
     }
 
+    /**
+     * Uploads an image file to the server.
+     *
+     * @param file The image file to upload.
+     * @return The response DTO containing the URL of the uploaded image.
+     * @throws IOException If an I/O error occurs during the upload process.
+     */
     private GetImageToServerResponseDto uploadImageToServer(MultipartFile file) throws IOException {
         String url = IMAGE_SERVER_BASE_URL+"/images/upload";
         HttpHeaders headers = new HttpHeaders();
@@ -113,7 +129,7 @@ public class PostServiceImpl implements PostService {
         for(Post post : postQueryRepository.findAllPost(findUserByAccessToken(accessToken))){
             GetAllPostDto tempPostDto = GetAllPostDto.builder()
                     .title(post.getTitle())
-                    .creatorId(post.getCreator().getId())
+                    .creatorId(post.getCreator() != null ? post.getCreator().getId() : null)
                     .views(post.getViews())
                     .createTs(post.getCreateTs())
                     .postCategoryId(post.getPostCategory().getId()).build();
@@ -124,7 +140,7 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public GetPostDto getPost(String accessToken, Long id) {
-        Post post = postQueryRepository.findPost(findUserByAccessToken(accessToken),id);
+        Post post = postQueryRepository.findPost(findUserByAccessToken(accessToken), id).orElseThrow(EntityNotFoundException::new);
         List<PostImage> postImage= postImageQueryRepository.findAllPostImage(id);
         List<String> postImageToString = new ArrayList<>();
         if(postImage.isEmpty()){
@@ -151,6 +167,9 @@ public class PostServiceImpl implements PostService {
     @Transactional
     public void updatePostDetail(String accessToken, UpdatePostDetailDto updatePostDetailDto, Long id) {
         // 1. 기존 포스트 조회 및 업데이트
+        if (!postRepository.existsById(id)) {
+            throw new IllegalArgumentException("Post with id " + id + " does not exist");
+        }
         Post post = postRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Post not found"));
         post.updateDetails(updatePostDetailDto.getTitle(), updatePostDetailDto.getContent());
         // 2. 이미지 삭제 처리
@@ -199,6 +218,10 @@ public class PostServiceImpl implements PostService {
     }
 
     private User findUserByAccessToken(String accessToken){
-        return userRepository.findByEmail(jwtService.extractEmail(accessToken).orElseThrow()).orElseThrow();
+        String email = jwtService.extractEmail(accessToken)
+                .orElseThrow(() -> new IllegalArgumentException("Access token is either expired or invalid. Please check the token."));
+
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("User with given email does not exist in the database. The email extracted from the access tokens is: " + email));
     }
 }
