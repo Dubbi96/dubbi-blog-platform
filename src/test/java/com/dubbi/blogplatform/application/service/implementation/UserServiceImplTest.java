@@ -1,11 +1,11 @@
 package com.dubbi.blogplatform.application.service.implementation;
 
-import com.dubbi.blogplatform.application.dto.UserSignUpDto;
-import com.dubbi.blogplatform.application.service.implementation.UserServiceImpl;
-import com.dubbi.blogplatform.domain.entity.User;
-import com.dubbi.blogplatform.domain.repository.UserRepository;
-import com.dubbi.blogplatform.enumeratedclasses.Role;
-import com.dubbi.blogplatform.enumeratedclasses.SocialType;
+import com.dubbi.blogplatform.authentication.application.dto.dto.UserSignUpDto;
+import com.dubbi.blogplatform.authentication.application.service.implementation.UserServiceImpl;
+import com.dubbi.blogplatform.authentication.domain.entity.User;
+import com.dubbi.blogplatform.authentication.domain.repository.UserRepository;
+import com.dubbi.blogplatform.common.enumeratedclasses.Role;
+import com.dubbi.blogplatform.common.enumeratedclasses.SocialType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

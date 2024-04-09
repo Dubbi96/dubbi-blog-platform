@@ -4,16 +4,80 @@
   <meta charset="UTF-8">
   <title>로그인</title>
   <!-- 여기에 필요한 CSS 파일 링크를 추가할 수 있습니다 -->
+  <script>
+    window.onload = function() {
+      document.getElementById("loginBtn").addEventListener("click", executeLogin);
+      document.getElementById("getPostBtn").addEventListener("click", executeGetPost);
+    };
+
+    // 로그인 버튼 클릭 시 호출되는 함수
+    function executeLogin(event) {
+      event.preventDefault(); // 기본 제출 방지
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      fetch('/login', {
+        method: 'POST', // POST 메서드로 변경
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          email: email,
+          password: password
+        })
+      }).then((response) => {
+        if (!response.ok) {
+          throw new Error('로그인에 실패하였습니다.'); // 실패한 경우 에러 처리
+        }
+        const authorizationHeader = response.headers.get('Authorization'); // 응답 헤더에서 Authorization 헤더 값 가져오기
+        if (!authorizationHeader) {
+          throw new Error('토큰이 없습니다.'); // 토큰이 없는 경우 에러 처리
+        }
+        const token = authorizationHeader.split(' '); // Bearer 토큰 형식에서 토큰만 추출
+        saveTokenToLocalStorage(token); // 추출한 토큰을 로컬 스토리지에 저장
+      }).catch((error) => console.error('Error:', error)); // catch를 이용해 오류를 잡아줍니다.
+    }
+
+    // 포스트 가져오기 버튼 클릭 시 호출되는 함수
+    function executeGetPost(event) {
+      event.preventDefault(); // 기본 제출 방지
+      const authorizationToken = getTokenFromLocalStorage(); // 로컬 스토리지에서 토큰을 가져옴
+      if (!authorizationToken) {
+        console.error('토큰이 없습니다.'); // 토큰이 없는 경우 에러 출력
+        return;
+      }
+      fetch('/posts', {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${authorizationToken}` // 토큰을 요청 헤더에 추가
+        }
+      }).then((response) => {
+        if (!response.ok) {
+          throw new Error('포스트를 가져오는데 실패하였습니다.'); // 실패한 경우 에러 처리
+        }
+        console.log('포스트를 성공적으로 가져왔습니다.');
+        // 여기에 포스트를 표시하거나, 필요한 페이지로 리다이렉트를 수행할 수 있습니다.
+      }).catch((error) => console.error('Error:', error)); // catch를 이용해 오류를 잡아줍니다.
+    }
+
+    // 로컬 스토리지에 토큰을 저장하는 함수
+    function saveTokenToLocalStorage(token) {
+      localStorage.setItem('authorizationToken', token);
+    }
+
+    // 로컬 스토리지에서 토큰을 가져오는 함수
+    function getTokenFromLocalStorage() {
+      return localStorage.getItem('authorizationToken');
+    }
+  </script>
 </head>
 <body>
 <h2>로그인 화면</h2>
-<form class="form-signin" method="post" action="/login/login-proc">
-  <input type="text" id="username" name="username" class="form-control" placeholder="아이디" autofocus="" />
-  <input type="text" id="password" name="password" class="form-control" placeholder="비밀번호" />
-
-  <input id="loginBtn" type="submit" class="btn btn-secondary active" value="로그인" />
+<form class="form-signin">
+  <input type="text" id="email" name="email" class="form-control" placeholder="아이디" autofocus="" />
+  <input type="password" id="password" name="password" class="form-control" placeholder="비밀번호" />
+  <button id="loginBtn" class="btn btn-secondary active">로그인</button>
+  <button id="getPostBtn" class="btn btn-secondary active">포스트 가져오기</button>
 </form>
-
 <h2>회원 가입</h2>
 <div>
   <a href="/oauth2/authorization/kakao" class="btn btn-primary">카카오로 가입하기</a>

@@ -1,8 +1,8 @@
 package com.dubbi.blogplatform.application.aspect;
 
 import com.dubbi.blogplatform.application.factory.MockSecurityContextFactory;
-import com.dubbi.blogplatform.enumeratedclasses.Role;
-import com.dubbi.blogplatform.enumeratedclasses.SocialType;
+import com.dubbi.blogplatform.common.enumeratedclasses.Role;
+import com.dubbi.blogplatform.common.enumeratedclasses.SocialType;
 import org.springframework.security.test.context.support.WithSecurityContext;
 
 import java.lang.annotation.Retention;
