@@ -1,14 +1,12 @@
 package com.dubbi.blogplatform.application.factory;
 
 import com.dubbi.blogplatform.application.aspect.MockMember;
-import com.dubbi.blogplatform.domain.entity.Image;
-import com.dubbi.blogplatform.domain.entity.User;
+import com.dubbi.blogplatform.post.domain.entity.Image;
+import com.dubbi.blogplatform.authentication.domain.entity.User;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.test.context.support.WithSecurityContextFactory;
-
-import java.security.Security;
 
 public class MockSecurityContextFactory implements WithSecurityContextFactory<MockMember> {
     @Override

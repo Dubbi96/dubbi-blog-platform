@@ -1,9 +1,9 @@
 package com.dubbi.blogplatform.config;
 
-import com.dubbi.blogplatform.application.service.JwtService;
-import com.dubbi.blogplatform.application.service.implementation.CustomOAuth2UserService;
-import com.dubbi.blogplatform.application.service.implementation.LoginServiceImpl;
-import com.dubbi.blogplatform.domain.repository.UserRepository;
+import com.dubbi.blogplatform.authentication.application.service.JwtService;
+import com.dubbi.blogplatform.authentication.application.service.implementation.CustomOAuth2UserService;
+import com.dubbi.blogplatform.authentication.application.service.implementation.LoginServiceImpl;
+import com.dubbi.blogplatform.authentication.domain.repository.UserRepository;
 import com.dubbi.blogplatform.filters.CustomJsonUsernamePasswordAuthenticationFilter;
 import com.dubbi.blogplatform.filters.JwtAuthenticationProcessingFilter;
 import com.dubbi.blogplatform.handler.LoginFailureHandler;
@@ -63,7 +63,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorizeRequest
                         -> authorizeRequest
                         .requestMatchers("/","/css/**","/images/**","/js/**","/favicon.ico","/h2-console/**").permitAll()
-                        .requestMatchers("/sign-up").permitAll()
+                        .requestMatchers("/sign-up","/login").permitAll()
                         .anyRequest().authenticated())
                 //== 소셜 로그인 설정 ==//
                 .oauth2Login(oauth
@@ -71,7 +71,8 @@ public class SecurityConfig {
                         .successHandler(oAuth2LoginSuccessHandler) // 동의하고 계속하기를 눌렀을 때 Handler 설정
                         .failureHandler(oAuth2LoginFailureHandler) // 소셜 로그인 실패 시 핸들러 설정
                         .userInfoEndpoint(endpoint
-                                -> endpoint.userService(customOAuth2UserService))); // customUserService 설정
+                                -> endpoint.userService(customOAuth2UserService))
+                        .loginPage("/login")); // customUserService 설정
 
         // 원래 스프링 시큐리티 필터 순서가 LogoutFilter 이후에 로그인 필터 동작
         // 따라서, LogoutFilter 이후에 우리가 만든 필터 동작하도록 설정

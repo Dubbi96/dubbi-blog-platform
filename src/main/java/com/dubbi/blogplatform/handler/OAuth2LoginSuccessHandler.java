@@ -1,8 +1,8 @@
 package com.dubbi.blogplatform.handler;
 
-import com.dubbi.blogplatform.application.dto.CustomOAuth2User;
-import com.dubbi.blogplatform.application.service.JwtService;
-import com.dubbi.blogplatform.enumeratedclasses.Role;
+import com.dubbi.blogplatform.authentication.application.dto.dto.CustomOAuth2User;
+import com.dubbi.blogplatform.authentication.application.service.JwtService;
+import com.dubbi.blogplatform.common.enumeratedclasses.Role;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +19,7 @@ import java.io.IOException;
 public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
 
     private final JwtService jwtService;
-    private static final String BASE_URL = "http://localhost:9002";
+    //private static final String BASE_URL = "https://localhost:9001";
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
@@ -31,7 +31,7 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
             if(oAuth2User.getRole() == Role.GUEST){
                 String accessToken = jwtService.createAccessToken(oAuth2User.getEmail());
                 response.addHeader(jwtService.getAccessHeader(),tokenToHeader(accessToken));
-                response.sendRedirect(BASE_URL+"/signup.html"); //프론트 회원가입 추가 정보 입력 form으로 redirect
+                //response.sendRedirect(BASE_URL+"/posts"); //프론트 회원가입 추가 정보 입력 form으로 redirect
 
                 jwtService.sendAccessAndRefreshToken(response, accessToken, null);
             }else {
@@ -47,7 +47,7 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
         String refreshToken = jwtService.createRefreshToken();
         response.addHeader(jwtService.getAccessHeader(), tokenToHeader(accessToken));
         response.addHeader(jwtService.getRefreshHeader(), tokenToHeader(refreshToken));
-        response.sendRedirect(BASE_URL+"/post.html");
+        //response.sendRedirect(BASE_URL+"/login");
 
         jwtService.sendAccessAndRefreshToken(response, accessToken, refreshToken);
         log.info("계정 이메일 : {} " , oAuth2User.getEmail());

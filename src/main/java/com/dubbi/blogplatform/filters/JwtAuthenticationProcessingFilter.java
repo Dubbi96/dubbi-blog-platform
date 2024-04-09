@@ -1,8 +1,8 @@
 package com.dubbi.blogplatform.filters;
 
-import com.dubbi.blogplatform.application.service.JwtService;
-import com.dubbi.blogplatform.domain.entity.User;
-import com.dubbi.blogplatform.domain.repository.UserRepository;
+import com.dubbi.blogplatform.authentication.application.service.JwtService;
+import com.dubbi.blogplatform.authentication.domain.entity.User;
+import com.dubbi.blogplatform.authentication.domain.repository.UserRepository;
 import com.dubbi.blogplatform.utils.PasswordUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -142,15 +142,14 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
         if (password == null) { // 소셜 로그인 유저의 비밀번호 임의로 설정 하여 소셜 로그인 유저도 인증 되도록 설정
             password = PasswordUtil.generateRandomPassword();
         }
-
         UserDetails userDetailsUser = org.springframework.security.core.userdetails.User.builder()
                 .username(myUser.getEmail())
                 .password(password)
                 .roles(myUser.getRole().name())
                 .build();
-
+        //Credential에는 User 객체를 직점 담아 저장해둔 상태이므로 만약 인증 절차, creator 저장이 필요하다면 credentiald
         Authentication authentication =
-                new UsernamePasswordAuthenticationToken(userDetailsUser, null,
+                new UsernamePasswordAuthenticationToken(userDetailsUser, myUser,
                         authoritiesMapper.mapAuthorities(userDetailsUser.getAuthorities()));
 
         SecurityContextHolder.getContext().setAuthentication(authentication);

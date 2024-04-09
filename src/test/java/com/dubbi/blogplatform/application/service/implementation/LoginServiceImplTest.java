@@ -1,9 +1,9 @@
 package com.dubbi.blogplatform.application.service.implementation;
 
-import com.dubbi.blogplatform.application.service.implementation.LoginServiceImpl;
-import com.dubbi.blogplatform.domain.entity.User;
-import com.dubbi.blogplatform.domain.repository.UserRepository;
-import com.dubbi.blogplatform.enumeratedclasses.Role;
+import com.dubbi.blogplatform.authentication.application.service.implementation.LoginServiceImpl;
+import com.dubbi.blogplatform.authentication.domain.entity.User;
+import com.dubbi.blogplatform.authentication.domain.repository.UserRepository;
+import com.dubbi.blogplatform.common.enumeratedclasses.Role;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;

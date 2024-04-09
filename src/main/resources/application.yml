@@ -1,4 +1,3 @@
-
 server:
   port: 9001
   servlet:
@@ -6,7 +5,7 @@ server:
 
 spring:
   profiles:
-    include: jwt,oauth, ssl, datasource-dev, imageserver #,datasource-local #포함시킬 application files 나열
+    include: jwt,oauth, ssl, datasource-local #,datasource-local #포함시킬 application files 나열
 
   main:
     allow-bean-definition-overriding: true
@@ -25,9 +24,3 @@ spring:
         jdbc:
           lob:
             non_contextual_creation: true
-
-  servlet:
-    multipart:
-      enabled: true
-      max-file-size: 2MB
-      max-request-size: 10MB
