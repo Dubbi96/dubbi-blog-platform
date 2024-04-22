@@ -1,4 +1,4 @@
-package com.dubbi.blogplatform.authentication.application.dto.dto;
+package com.dubbi.blogplatform.post.application.dto;
 
 import lombok.Builder;
 import lombok.Getter;

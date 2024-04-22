@@ -1,4 +1,4 @@
-package com.dubbi.blogplatform.authentication.application.dto.dto;
+package com.dubbi.blogplatform.authentication.application.dto;
 
 import java.util.Map;
 

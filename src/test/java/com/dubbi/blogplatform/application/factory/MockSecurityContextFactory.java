@@ -1,7 +1,7 @@
 package com.dubbi.blogplatform.application.factory;
 
 import com.dubbi.blogplatform.application.aspect.MockMember;
-import com.dubbi.blogplatform.post.domain.entity.Image;
+import com.dubbi.blogplatform.imageserver.domain.entity.Image;
 import com.dubbi.blogplatform.authentication.domain.entity.User;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContext;

@@ -1,6 +1,6 @@
 package com.dubbi.blogplatform.handler;
 
-import com.dubbi.blogplatform.authentication.application.dto.dto.CustomOAuth2User;
+import com.dubbi.blogplatform.authentication.application.dto.CustomOAuth2User;
 import com.dubbi.blogplatform.authentication.application.service.JwtService;
 import com.dubbi.blogplatform.common.enumeratedclasses.Role;
 import jakarta.servlet.http.HttpServletRequest;

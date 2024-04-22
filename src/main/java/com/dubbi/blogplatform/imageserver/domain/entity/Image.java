@@ -1,17 +1,14 @@
-package com.dubbi.blogplatform.post.domain.entity;
+package com.dubbi.blogplatform.imageserver.domain.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Getter
-@Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
 @Table(name = "images")
-@EntityListeners(AuditingEntityListener.class)
 public class Image {
     @Id
     @Column(name = "ID")

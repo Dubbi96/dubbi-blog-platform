@@ -5,12 +5,10 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Getter
-@Setter
 @Entity
 @Table(name = "post_category")
 @NoArgsConstructor
@@ -23,8 +21,7 @@ public class PostCategory extends BaseEntity {
     private String categoryName;
 
     @ManyToOne
-    @JoinColumn(name = "parent_id", nullable = true) // 변경: 부모 카테고리가 없을 수도 있으므로 nullable = true
-    private PostCategory parent;
+    @JoinColumn(name = "child_id") // 변경: 부모 카테고리가 없을 수도 있으므로 nullable = true
+    private PostCategory child;
 
-    // Getters and setters...
 }

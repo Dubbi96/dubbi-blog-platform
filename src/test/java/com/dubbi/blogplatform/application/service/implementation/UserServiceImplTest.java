@@ -1,6 +1,6 @@
 package com.dubbi.blogplatform.application.service.implementation;
 
-import com.dubbi.blogplatform.authentication.application.dto.dto.UserSignUpDto;
+import com.dubbi.blogplatform.authentication.application.dto.UserSignUpDto;
 import com.dubbi.blogplatform.authentication.application.service.implementation.UserServiceImpl;
 import com.dubbi.blogplatform.authentication.domain.entity.User;
 import com.dubbi.blogplatform.authentication.domain.repository.UserRepository;
@@ -20,7 +20,6 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
-
 
 @DisplayName("UserServiceImpl Unit Test")
 public class UserServiceImplTest {

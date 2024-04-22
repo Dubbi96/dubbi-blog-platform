@@ -19,22 +19,22 @@ jobs:
         with:
           java-version: 17
           distribution: 'adopt' # Add distribution to specify the provider, adopt is a common choice
-      - name: Cache SonarQube packages
-        uses: actions/cache@v3 # Updated to use Node.js 20
-        with:
-          path: ~/.sonar/cache
-          key: ${{ runner.os }}-sonar
-          restore-keys: ${{ runner.os }}-sonar
-      - name: Cache Gradle packages
-        uses: actions/cache@v3 # Updated to use Node.js 20
-        with:
-          path: ~/.gradle/caches
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
-          restore-keys: ${{ runner.os }}-gradle
+      #- name: Cache SonarQube packages
+      #  uses: actions/cache@v3 # Updated to use Node.js 20
+      #  with:
+      #    path: ~/.sonar/cache
+      #    key: ${{ runner.os }}-sonar
+      #    restore-keys: ${{ runner.os }}-sonar
+      #- name: Cache Gradle packages
+      #  uses: actions/cache@v3 # Updated to use Node.js 20
+      #  with:
+      #    path: ~/.gradle/caches
+      #    key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
+      #    restore-keys: ${{ runner.os }}-gradle
       - name: Grant execute permission for gradlew
         run: chmod +x ./gradlew
       - name: Build and analyze
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
-        run: ./gradlew build sonar --info --scan
+      #  env:
+      #    SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      #    SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+        run: ./gradlew build #sonar --info --scan

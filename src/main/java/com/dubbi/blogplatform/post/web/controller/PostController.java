@@ -1,10 +1,8 @@
 package com.dubbi.blogplatform.post.web.controller;
 
-import com.dubbi.blogplatform.authentication.application.dto.dto.CreatePostDto;
-import com.dubbi.blogplatform.authentication.application.dto.dto.GetAllPostDto;
-import com.dubbi.blogplatform.authentication.application.dto.dto.GetPostDto;
-import com.dubbi.blogplatform.authentication.application.dto.dto.UpdatePostDetailDto;
+import com.dubbi.blogplatform.post.application.dto.*;
 import com.dubbi.blogplatform.post.application.service.PostService;
+import com.dubbi.blogplatform.post.domain.vo.PostVo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -20,19 +18,24 @@ public class PostController {
     private final PostService postService;
 
     @PostMapping("/post")
-    public ResponseEntity<String> createPost(
+    public ResponseEntity<PostVo> createPost(
             @RequestParam("title") String title,
             @RequestParam("content") String content,
             @RequestParam("postCategoryId") Long postCategoryId,
             @RequestParam("postImage") MultipartFile[] postImage) {
         CreatePostDto createPostDto = new CreatePostDto(title, content, postImage, postCategoryId);
-        postService.createPost(createPostDto);
-        return ResponseEntity.ok("Post saved");
+        PostVo savedPost = postService.createPost(createPostDto);
+        return ResponseEntity.ok(savedPost);
     }
 
     @GetMapping("/post")
     public ResponseEntity<List<GetAllPostDto>> getAllPost(){
         List<GetAllPostDto> posts = postService.getAllPost();
+        return ResponseEntity.ok(posts);}
+
+    @GetMapping("/get-all-post")
+    public ResponseEntity<List<PostVo>> getAllPostNew(){
+        List<PostVo> posts = postService.getAllPostWithCollectionDtos();
         return ResponseEntity.ok(posts);
     }
 
@@ -42,14 +45,14 @@ public class PostController {
     }
 
     @PutMapping("/post/{id}")
-    public ResponseEntity<String> updatePostDetail(@RequestParam("title") String title,
+    public ResponseEntity<PostVo> updatePostDetail(@RequestParam("title") String title,
                                                    @RequestParam("content") String content,
                                                    @RequestParam("deletedImageIds") List<Long> deleteImageId,
                                                    @RequestParam("newPostImages") List<MultipartFile> newPostImages,
                                                    @PathVariable Long id){
         UpdatePostDetailDto updatePostDetailDto = new UpdatePostDetailDto(title,content,deleteImageId,newPostImages);
-        postService.updatePostDetail(updatePostDetailDto,id);
-        return ResponseEntity.ok("Post successfully updated");
+        PostVo updatedPost = postService.updatePostDetail(updatePostDetailDto,id);
+        return ResponseEntity.ok(updatedPost);
     }
 
     @PatchMapping("/post/{id}")

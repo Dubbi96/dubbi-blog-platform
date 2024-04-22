@@ -1,13 +1,13 @@
 spring:
   datasource:
     url: jdbc:mysql://localhost:3306/DUBBI
-    username: DUBBI
-    password: kang8349
+    username: root
+    password: 8349
     driver-class-name: com.mysql.cj.jdbc.Driver
   servlet:
     multipart:
-      max-file-size: 5MB
-      max-request-size: 5MB
+      max-file-size: 100MB
+      max-request-size: 115MB
       enabled: true
 app:
   file-storage-location: 'uploads/'

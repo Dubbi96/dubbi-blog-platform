@@ -1,10 +1,10 @@
 package com.dubbi.blogplatform.authentication.domain.entity;
 
-import com.dubbi.blogplatform.authentication.application.dto.dto.OAuthEnrollDto;
+import com.dubbi.blogplatform.authentication.application.dto.OAuthEnrollDto;
 import com.dubbi.blogplatform.common.domain.entity.BaseEntity;
 import com.dubbi.blogplatform.common.enumeratedclasses.Role;
 import com.dubbi.blogplatform.common.enumeratedclasses.SocialType;
-import com.dubbi.blogplatform.post.domain.entity.Image;
+import com.dubbi.blogplatform.imageserver.domain.entity.Image;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -20,7 +20,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "users")
+@Table(name = "user")
 @EntityListeners(AuditingEntityListener.class)
 public class User extends BaseEntity {
 

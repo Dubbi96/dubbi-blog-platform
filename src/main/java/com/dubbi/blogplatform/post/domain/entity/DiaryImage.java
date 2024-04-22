@@ -1,15 +1,14 @@
 package com.dubbi.blogplatform.post.domain.entity;
 
+import com.dubbi.blogplatform.imageserver.domain.entity.Image;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.experimental.SuperBuilder;
 
 @Getter
-@Setter
-@SuperBuilder
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
@@ -20,7 +19,7 @@ public class DiaryImage {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "image_id", nullable = false)
     private Image image;
 

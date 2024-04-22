@@ -1,17 +1,17 @@
 package com.dubbi.blogplatform.post.application.service.implementation;
 
-import com.dubbi.blogplatform.authentication.application.dto.dto.CreatePostDto;
-import com.dubbi.blogplatform.authentication.application.dto.dto.GetAllPostDto;
-import com.dubbi.blogplatform.authentication.application.dto.dto.GetPostDto;
-import com.dubbi.blogplatform.authentication.application.dto.dto.UpdatePostDetailDto;
-import com.dubbi.blogplatform.authentication.application.service.JwtService;
 import com.dubbi.blogplatform.authentication.domain.entity.User;
-import com.dubbi.blogplatform.authentication.domain.repository.UserRepository;
+import com.dubbi.blogplatform.imageserver.domain.entity.Image;
+import com.dubbi.blogplatform.imageserver.domain.repository.ImageRepository;
+import com.dubbi.blogplatform.post.application.dto.CreatePostDto;
+import com.dubbi.blogplatform.post.application.dto.GetAllPostDto;
+import com.dubbi.blogplatform.post.application.dto.GetPostDto;
+import com.dubbi.blogplatform.post.application.dto.UpdatePostDetailDto;
 import com.dubbi.blogplatform.post.application.service.PostService;
-import com.dubbi.blogplatform.post.domain.entity.Image;
 import com.dubbi.blogplatform.post.domain.entity.Post;
 import com.dubbi.blogplatform.post.domain.entity.PostImage;
 import com.dubbi.blogplatform.post.domain.repository.*;
+import com.dubbi.blogplatform.post.domain.vo.PostVo;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -28,7 +28,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -46,8 +45,6 @@ public class PostServiceImpl implements PostService {
     private final PostImageQueryRepository postImageQueryRepository;
     private final PostImageRepository postImageRepository;
     private final ImageRepository imageRepository;
-    private final UserRepository userRepository;
-    private final JwtService jwtService;
 
     @Value("${app.file-storage-location}")
     private String fileStorageLocation;
@@ -59,12 +56,11 @@ public class PostServiceImpl implements PostService {
      */
     @Override
     @Transactional
-    public void createPost(CreatePostDto createPostDto) {
+    public PostVo createPost(CreatePostDto createPostDto) {
         Post post = Post.builder()
                 .creator(getUserFromContextHolder())
                 .title(createPostDto.getTitle())
                 .content(createPostDto.getContent())
-                .createTs(LocalDateTime.now())
                 .isDeactivated(false)
                 .views(0L)
                 .postCategory(postCategoryRepository.findById(createPostDto.getPostCategoryId()).orElseThrow())
@@ -79,10 +75,9 @@ public class PostServiceImpl implements PostService {
                     .sequence(imageSeq++).build();
             postImageRepository.save(newPostImage);
         }
-
+        return new PostVo(newPost);
     }
-
-    public Image storeImage(MultipartFile file){
+    private Image storeImage(MultipartFile file){
         String fileName = storeFile(file);
         String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path("/download/")
@@ -95,9 +90,7 @@ public class PostServiceImpl implements PostService {
                 .contentType(file.getContentType()).build();
         return imageRepository.save(image);
     }
-
-
-    public String storeFile(MultipartFile file) {
+    private String storeFile(MultipartFile file) {
         String originalFileName = StringUtils.cleanPath(Objects.requireNonNull(file.getOriginalFilename()));
         try {
             if (originalFileName.contains("..")) {
@@ -124,6 +117,18 @@ public class PostServiceImpl implements PostService {
                     .createTs(post.getCreateTs())
                     .postCategoryId(post.getPostCategory().getId()).build();
             response.add(tempPostDto);
+        }
+        return response;
+    }
+
+    //이 방식이 query수가 더 적어 getAllPost()를 대체할 예정
+    @Override
+    public List<PostVo> getAllPostWithCollectionDtos() {
+        List<Post> posts = postQueryRepository.findAllPostsWithDetails(getUserFromContextHolder());
+        log.error("start context");
+        List<PostVo> response = new ArrayList<>();
+        for(Post post : posts){
+            response.add(new PostVo(post));
         }
         return response;
     }
@@ -155,7 +160,7 @@ public class PostServiceImpl implements PostService {
 
     @Override
     @Transactional
-    public void updatePostDetail(UpdatePostDetailDto updatePostDetailDto, Long id) {
+    public PostVo updatePostDetail(UpdatePostDetailDto updatePostDetailDto, Long id) {
         // 1. 기존 포스트 조회 및 업데이트
         if (!postRepository.existsById(id)) {
             throw new IllegalArgumentException("Post with id " + id + " does not exist");
@@ -183,7 +188,8 @@ public class PostServiceImpl implements PostService {
             }
         }
         // 4. 포스트 저장
-        postRepository.save(post);
+        Post updatedPost = postRepository.save(post);
+        return new PostVo(updatedPost);
     }
 
     @Override

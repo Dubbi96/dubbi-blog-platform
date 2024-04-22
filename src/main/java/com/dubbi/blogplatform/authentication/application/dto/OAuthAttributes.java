@@ -3,7 +3,7 @@ package com.dubbi.blogplatform.authentication.application.dto;
 import com.dubbi.blogplatform.authentication.domain.entity.User;
 import com.dubbi.blogplatform.common.enumeratedclasses.Role;
 import com.dubbi.blogplatform.common.enumeratedclasses.SocialType;
-import com.dubbi.blogplatform.post.domain.entity.Image;
+import com.dubbi.blogplatform.imageserver.domain.entity.Image;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -18,10 +18,10 @@ import java.util.UUID;
 public class OAuthAttributes {
 
     private String nameAttributeKey; // OAuth2 로그인 진행 시 키가 되는 필드 값, PK와 같은 의미
-    private com.dubbi.blogplatform.authentication.application.dto.dto.OAuth2UserInfo oauth2UserInfo; // 소셜 타입별 로그인 유저 정보(닉네임, 이메일, 프로필 사진 등)
+    private com.dubbi.blogplatform.authentication.application.dto.OAuth2UserInfo oauth2UserInfo; // 소셜 타입별 로그인 유저 정보(닉네임, 이메일, 프로필 사진 등)
 
     @Builder
-    private OAuthAttributes(String nameAttributeKey, com.dubbi.blogplatform.authentication.application.dto.dto.OAuth2UserInfo oauth2UserInfo){
+    private OAuthAttributes(String nameAttributeKey, com.dubbi.blogplatform.authentication.application.dto.OAuth2UserInfo oauth2UserInfo){
         this.nameAttributeKey = nameAttributeKey;
         this.oauth2UserInfo = oauth2UserInfo;
     }
@@ -71,7 +71,7 @@ public class OAuthAttributes {
      * email에는 UUID로 중복 없는 랜덤 값 생성
      * role은 GUEST로 설정
      */
-    public User toEntity(SocialType socialType, com.dubbi.blogplatform.authentication.application.dto.dto.OAuth2UserInfo oauth2UserInfo, Image image) {
+    public User toEntity(SocialType socialType, com.dubbi.blogplatform.authentication.application.dto.OAuth2UserInfo oauth2UserInfo, Image image) {
         return User.builder()
                 .socialType(socialType)
                 .socialId(oauth2UserInfo.getId())

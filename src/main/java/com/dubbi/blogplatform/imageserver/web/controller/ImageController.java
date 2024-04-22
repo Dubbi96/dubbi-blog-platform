@@ -1,7 +1,7 @@
-package com.dubbi.blogplatform.post.web.controller;
+package com.dubbi.blogplatform.imageserver.web.controller;
 
-import com.dubbi.blogplatform.post.application.service.ImageService;
-import com.dubbi.blogplatform.post.domain.entity.Image;
+import com.dubbi.blogplatform.imageserver.application.service.ImageService;
+import com.dubbi.blogplatform.imageserver.domain.entity.Image;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
@@ -18,7 +18,7 @@ import java.io.IOException;
 @RestController
 @RequestMapping("/images")
 @RequiredArgsConstructor
-public class RootImageController {
+public class ImageController {
     private final ImageService imageService;
 
     @GetMapping("/url")

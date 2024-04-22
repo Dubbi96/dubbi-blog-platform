@@ -10,6 +10,8 @@ import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import java.util.List;
+
 @Getter
 @Setter
 @Entity
@@ -39,6 +41,9 @@ public class Post extends BaseEntity {
 
     @Column(name = "views")
     private Long views;
+
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<PostImage> postImage;
 
 public void updateDetails(String title, String content) {
         if (title != null && !title.isEmpty()) {

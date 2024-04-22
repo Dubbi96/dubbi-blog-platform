@@ -1,12 +1,12 @@
 package com.dubbi.blogplatform.authentication.application.service.implementation;
 
+import com.dubbi.blogplatform.authentication.application.dto.CustomOAuth2User;
 import com.dubbi.blogplatform.authentication.application.dto.OAuthAttributes;
-import com.dubbi.blogplatform.authentication.application.dto.dto.CustomOAuth2User;
 import com.dubbi.blogplatform.authentication.domain.entity.User;
 import com.dubbi.blogplatform.authentication.domain.repository.UserRepository;
 import com.dubbi.blogplatform.common.enumeratedclasses.SocialType;
-import com.dubbi.blogplatform.post.domain.entity.Image;
-import com.dubbi.blogplatform.post.domain.repository.ImageRepository;
+import com.dubbi.blogplatform.imageserver.domain.entity.Image;
+import com.dubbi.blogplatform.imageserver.domain.repository.ImageRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

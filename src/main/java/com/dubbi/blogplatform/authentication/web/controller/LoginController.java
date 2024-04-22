@@ -20,5 +20,5 @@ public class LoginController {
         User loginInfo = (User)SecurityContextHolder.getContext().getAuthentication().getCredentials();
         log.info(loginInfo.getNickname());
         log.info(loginInfo.getEmail());
-        return "redirect:/posts";}
+        return "/posts";}
 }

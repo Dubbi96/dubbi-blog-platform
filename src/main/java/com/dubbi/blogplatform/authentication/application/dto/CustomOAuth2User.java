@@ -1,4 +1,4 @@
-package com.dubbi.blogplatform.authentication.application.dto.dto;
+package com.dubbi.blogplatform.authentication.application.dto;
 
 import com.dubbi.blogplatform.common.enumeratedclasses.Role;
 import lombok.Getter;

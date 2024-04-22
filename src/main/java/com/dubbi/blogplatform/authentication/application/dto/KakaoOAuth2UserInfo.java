@@ -2,7 +2,7 @@ package com.dubbi.blogplatform.authentication.application.dto;
 
 import java.util.Map;
 
-public class KakaoOAuth2UserInfo extends com.dubbi.blogplatform.authentication.application.dto.dto.OAuth2UserInfo {
+public class KakaoOAuth2UserInfo extends com.dubbi.blogplatform.authentication.application.dto.OAuth2UserInfo {
 
     public KakaoOAuth2UserInfo(Map<String, Object> attributes) {
         super(attributes);

@@ -1,8 +1,8 @@
-package com.dubbi.blogplatform.post.application.service.implementation;
+package com.dubbi.blogplatform.imageserver.application.service.implementation;
 
-import com.dubbi.blogplatform.post.application.service.ImageService;
-import com.dubbi.blogplatform.post.domain.entity.Image;
-import com.dubbi.blogplatform.post.domain.repository.ImageRepository;
+import com.dubbi.blogplatform.imageserver.application.service.ImageService;
+import com.dubbi.blogplatform.imageserver.domain.entity.Image;
+import com.dubbi.blogplatform.imageserver.domain.repository.ImageRepository;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;

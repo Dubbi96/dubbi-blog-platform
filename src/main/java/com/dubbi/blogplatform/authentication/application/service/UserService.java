@@ -1,7 +1,7 @@
 package com.dubbi.blogplatform.authentication.application.service;
 
-import com.dubbi.blogplatform.authentication.application.dto.dto.GetUserDto;
-import com.dubbi.blogplatform.authentication.application.dto.dto.UserSignUpDto;
+import com.dubbi.blogplatform.authentication.application.dto.GetUserDto;
+import com.dubbi.blogplatform.authentication.application.dto.UserSignUpDto;
 import com.dubbi.blogplatform.authentication.domain.entity.User;
 
 public interface UserService {

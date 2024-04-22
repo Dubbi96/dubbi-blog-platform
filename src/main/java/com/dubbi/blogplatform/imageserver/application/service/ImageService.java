@@ -1,6 +1,6 @@
-package com.dubbi.blogplatform.post.application.service;
+package com.dubbi.blogplatform.imageserver.application.service;
 
-import com.dubbi.blogplatform.post.domain.entity.Image;
+import com.dubbi.blogplatform.imageserver.domain.entity.Image;
 import org.springframework.core.io.Resource;
 
 public interface ImageService {

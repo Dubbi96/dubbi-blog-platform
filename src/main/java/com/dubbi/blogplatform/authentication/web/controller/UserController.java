@@ -1,7 +1,7 @@
 package com.dubbi.blogplatform.authentication.web.controller;
 
-import com.dubbi.blogplatform.authentication.application.dto.dto.GetUserDto;
-import com.dubbi.blogplatform.authentication.application.dto.dto.UserSignUpDto;
+import com.dubbi.blogplatform.authentication.application.dto.GetUserDto;
+import com.dubbi.blogplatform.authentication.application.dto.UserSignUpDto;
 import com.dubbi.blogplatform.authentication.application.service.UserService;
 import com.dubbi.blogplatform.aspect.AccessTokenUser;
 import com.dubbi.blogplatform.authentication.domain.entity.User;

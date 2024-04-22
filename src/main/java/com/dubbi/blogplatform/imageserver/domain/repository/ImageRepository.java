@@ -1,6 +1,6 @@
-package com.dubbi.blogplatform.post.domain.repository;
+package com.dubbi.blogplatform.imageserver.domain.repository;
 
-import com.dubbi.blogplatform.post.domain.entity.Image;
+import com.dubbi.blogplatform.imageserver.domain.entity.Image;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
