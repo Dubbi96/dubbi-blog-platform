@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Builder
@@ -25,8 +26,6 @@ public class PostVo {
         views = post.getViews();
         createTs = post.getCreateTs();
         postCategoryId = new PostCategoryVo(post.getPostCategory());
-        postImages = post.getPostImage().stream()
-                .map(PostImageVo::new)
-                .toList();
+        postImages = post.getPostImage() != null ? post.getPostImage().stream().map(PostImageVo::new).toList() : new ArrayList<>();
     }
 }

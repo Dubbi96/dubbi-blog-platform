@@ -45,13 +45,13 @@ public class Post extends BaseEntity {
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PostImage> postImage;
 
-public void updateDetails(String title, String content) {
-        if (title != null && !title.isEmpty()) {
-            this.title = title;
+    public void updateDetails(String title, String content) {
+            if (title != null && !title.isEmpty()) {
+                this.title = title;
+            }
+            if (content != null && !content.isEmpty()) {
+                this.content = content;
+            }
         }
-        if (content != null && !content.isEmpty()) {
-            this.content = content;
-        }
-    }
 
 }

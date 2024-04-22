@@ -48,7 +48,7 @@ public class OnelinerServiceImpl implements OnelinerService {
             .build();
         Oneliner newOneliner = onelinerRepository.save(oneliner);
         long imageSeq = 0L;
-        for(MultipartFile file : createOnelinerDto.getImages()) {
+        for(MultipartFile file : createOnelinerDto.getOnelinerImages()) {
             Image storedImage = storeImage(file);
             OnelinerImage onelinerImage = OnelinerImage.builder()
                     .image(storedImage)
@@ -57,11 +57,6 @@ public class OnelinerServiceImpl implements OnelinerService {
             onelinerImageRepository.save(onelinerImage);
         }
         return new OnelinerVo(newOneliner);
-    /*
-    catch (ParseException e){
-        log.error("위치 정보가 부정확하게 입력되었습니다! 다시 시도해주세요.{}", e);
-        return new OnelinerVo();
-    }*/
     }
 
     private Image storeImage(MultipartFile file){

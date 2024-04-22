@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -20,8 +21,6 @@ public class OnelinerVo {
     public OnelinerVo(Oneliner oneliner) {
         id = oneliner.getId();
         content = oneliner.getContent();
-        onelinerImages = oneliner.getOnelinerImages().stream()
-                .map(OnelinerImageVo::new)
-                .toList();
+        onelinerImages = oneliner.getOnelinerImages() != null ? oneliner.getOnelinerImages().stream().map(OnelinerImageVo::new).toList() : new ArrayList<>();
     }
 }

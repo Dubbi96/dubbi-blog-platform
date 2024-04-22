@@ -19,7 +19,7 @@ public class OnelinerController {
 
     @PostMapping("/oneliner")
     public ResponseEntity<OnelinerVo> createOneliner(@RequestParam("content") String content,
-                                                     @RequestParam("onelinerImage") MultipartFile[] onelinerImage){
+                                                     @RequestParam("onelinerImages") MultipartFile[] onelinerImage){
         CreateOnelinerDto createOnelinerDto = new CreateOnelinerDto(content, onelinerImage);
         OnelinerVo savedOneliner = onelinerService.createOneliner(createOnelinerDto);
         return ResponseEntity.ok().body(savedOneliner);

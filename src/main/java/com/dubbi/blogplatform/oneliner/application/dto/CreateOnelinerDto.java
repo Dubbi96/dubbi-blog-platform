@@ -10,5 +10,5 @@ import org.springframework.web.multipart.MultipartFile;
 @Getter
 public class CreateOnelinerDto {
     private String content;
-    private MultipartFile[] images;
+    private MultipartFile[] onelinerImages;
 }
