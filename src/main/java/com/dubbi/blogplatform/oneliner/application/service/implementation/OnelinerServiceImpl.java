@@ -12,18 +12,14 @@ import com.dubbi.blogplatform.oneliner.domain.repository.OnelinerRepository;
 import com.dubbi.blogplatform.oneliner.domain.vo.OnelinerVo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.locationtech.jts.geom.Point;
-import org.locationtech.jts.io.ParseException;
-import org.locationtech.jts.io.WKTReader;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.reactive.TransactionalOperator;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import javax.transaction.Transactional;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -39,7 +35,6 @@ public class OnelinerServiceImpl implements OnelinerService {
     private final OnelinerRepository onelinerRepository;
     private final OnelinerImageRepository onelinerImageRepository;
     private final ImageRepository imageRepository;
-    private final TransactionalOperator transactionalOperator;
 
     @Value("${app.file-storage-location}")
     private String fileStorageLocation;
@@ -47,28 +42,26 @@ public class OnelinerServiceImpl implements OnelinerService {
     @Override
     @Transactional
     public OnelinerVo createOneliner(CreateOnelinerDto createOnelinerDto) {
-        try{
-            Oneliner oneliner = Oneliner.builder()
-                .creator(getUserFromContextHolder())
-                .content(createOnelinerDto.getContent())
-                .point(calculatePoint(createOnelinerDto.getLatitude(), createOnelinerDto.getLongitude()))
-                .build();
-            Oneliner newOneliner = onelinerRepository.save(oneliner);
-            long imageSeq = 0L;
-            for(MultipartFile file : createOnelinerDto.getImages()) {
-                Image storedImage = storeImage(file);
-                OnelinerImage onelinerImage = OnelinerImage.builder()
-                        .image(storedImage)
-                        .oneliner(newOneliner)
-                        .sequence(imageSeq++).build();
-                onelinerImageRepository.save(onelinerImage);
-            }
-            return new OnelinerVo(newOneliner);
+        Oneliner oneliner = Oneliner.builder()
+            .creator(getUserFromContextHolder())
+            .content(createOnelinerDto.getContent())
+            .build();
+        Oneliner newOneliner = onelinerRepository.save(oneliner);
+        long imageSeq = 0L;
+        for(MultipartFile file : createOnelinerDto.getImages()) {
+            Image storedImage = storeImage(file);
+            OnelinerImage onelinerImage = OnelinerImage.builder()
+                    .image(storedImage)
+                    .oneliner(newOneliner)
+                    .sequence(imageSeq++).build();
+            onelinerImageRepository.save(onelinerImage);
         }
-        catch (ParseException e){
-            log.error("위치 정보가 부정확하게 입력되었습니다! 다시 시도해주세요.{}", e);
-            return new OnelinerVo();
-        }
+        return new OnelinerVo(newOneliner);
+    /*
+    catch (ParseException e){
+        log.error("위치 정보가 부정확하게 입력되었습니다! 다시 시도해주세요.{}", e);
+        return new OnelinerVo();
+    }*/
     }
 
     private Image storeImage(MultipartFile file){
@@ -103,7 +96,7 @@ public class OnelinerServiceImpl implements OnelinerService {
         return (User) SecurityContextHolder.getContext().getAuthentication().getCredentials();
     }
 
-    public Point calculatePoint(Double latitude, Double longitude) throws ParseException {
+    /*public Point calculatePoint(Double latitude, Double longitude) throws ParseException {
         return latitude != null && longitude != null ? (Point) new WKTReader().read(String.format("POINT(%s %s)",latitude,longitude)) : null;
-    }
+    }*/
 }

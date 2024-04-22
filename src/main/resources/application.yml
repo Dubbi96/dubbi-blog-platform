@@ -19,7 +19,7 @@ spring:
     database-platform: org.hibernate.dialect.MySQLDialect
     open-in-view: true
     properties:
-        temp :
+      temp:
         format_sql: true
         jdbc:
           lob:

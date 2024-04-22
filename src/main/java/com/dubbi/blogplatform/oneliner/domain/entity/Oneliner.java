@@ -7,7 +7,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
-import org.locationtech.jts.geom.Point;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.util.List;
@@ -27,9 +26,6 @@ public class Oneliner extends BaseEntity {
 
     @Column(name = "content")
     private String content;
-
-    @Column(name = "point")
-    private Point point;
 
     @OneToMany(mappedBy = "oneliner", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OnelinerImage> onelinerImages;

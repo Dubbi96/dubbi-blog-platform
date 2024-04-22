@@ -10,7 +10,5 @@ import org.springframework.web.multipart.MultipartFile;
 @Getter
 public class CreateOnelinerDto {
     private String content;
-    private Double longitude;
-    private Double latitude;
     private MultipartFile[] images;
 }
